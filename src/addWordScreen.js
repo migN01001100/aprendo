@@ -1,8 +1,13 @@
 import React from 'react';
-import {View, StyleSheet, ScrollView} from 'react-native';
+import {
+    View, 
+    StyleSheet, 
+    ScrollView
+} from 'react-native';
 import {
     FAB,
-    TextInput
+    TextInput,
+    Appbar
 } from 'react-native-paper';
 
 export const AddWordScreen = ({navigation}) => {
@@ -10,6 +15,10 @@ export const AddWordScreen = ({navigation}) => {
     return (
         
             <View style={styles.father}>
+                <Appbar.Header>
+                    <Appbar.BackAction onPress={()=>navigation.goBack()}/>
+                    <Appbar.Content title="Add a new word" />
+                </Appbar.Header>
                 <View style={styles.form}>
                     <ScrollView>
                         <TextInput label="Main" mode="outlined" />

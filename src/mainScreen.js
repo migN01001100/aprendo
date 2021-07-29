@@ -1,17 +1,27 @@
 import React from 'react';
 import { View, StyleSheet} from 'react-native';
-import {FAB} from  'react-native-paper'
+import {FAB, Appbar} from  'react-native-paper';
+import {DrawerActions} from '@react-navigation/native'
 
 const Main = ({navigation}) => {
 
     return(
-        <View style={styles.bottomFab}>
-            <FAB icon="plus" onPress={()=> navigation.navigate('Add')}/>
+        <View style={styles.father}>
+                <Appbar.Header>
+                    <Appbar.Action icon="menu" onPress={()=>navigation.dispatch(DrawerActions.openDrawer())} />
+                    <Appbar.Content title="German" subtitle="Adverbs"/>
+                </Appbar.Header>
+            <View style={styles.bottomFab}>
+                <FAB icon="plus" onPress={()=> navigation.navigate('Add')}/>
+            </View>
         </View>
     )   
 }
 
 const styles = StyleSheet.create({
+    father:{
+        flex: 1
+    },  
     bottomFab: {
         position: 'absolute',
         margin: 16,
