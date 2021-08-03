@@ -11,7 +11,7 @@ import {
 } from 'react-native-paper';
 
 export const AddWordScreen = ({navigation}) => {
-      
+    
     return (
         
             <View style={styles.father}>

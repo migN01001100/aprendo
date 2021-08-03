@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, StyleSheet} from 'react-native';
 import {FAB, Appbar} from  'react-native-paper';
-import {DrawerActions} from '@react-navigation/native'
-
+import {DrawerActions} from '@react-navigation/native';
+import store from './redux/store';
 const Main = ({navigation}) => {
-
+    console.log(store.getState())
     return(
         <View style={styles.father}>
                 <Appbar.Header>
