@@ -38,25 +38,25 @@ export const AddWordScreen = ({navigation}) => {
                         <TextInput label="Primary" mode="outlined" value={primary}
                             onChangeText={word => {setPrimary(word)}}
                         />
-                        <TextInput label="Secondary" mode="outlined" 
+                        <TextInput label="Secondary" mode="outlined" value={secondary}
                             onChangeText={word => {setSecondary(word)}}
                         />
-                        <TextInput label="Middle" mode="outlined" 
+                        <TextInput label="Middle" mode="outlined" value={middle}
                             onChangeText={word => {setMiddle(word)}}
                         />
-                        <TextInput label="Secondary" mode="outlined" 
+                        <TextInput label="Secondary" mode="outlined" value={msecondary}
                             onChangeText={word => {setMsecondary(word)}}
                         />
-                        <TextInput label="Top Left" mode="outlined" 
+                        <TextInput label="Top Left" mode="outlined" value={topLeft}
                             onChangeText={word => {setTopLeft(word)}}
                         />
-                        <TextInput label="Top Right" mode="outlined" 
+                        <TextInput label="Top Right" mode="outlined" value={topRight}
                             onChangeText={word => {setTopRight(word)}}
                         />
-                        <TextInput label="Bottom Left" mode="outlined" 
+                        <TextInput label="Bottom Left" mode="outlined" value={bottomLeft}
                             onChangeText={word => {setBottomLeft(word)}}
                         />
-                        <TextInput label="Bottom Right" mode="outlined" 
+                        <TextInput label="Bottom Right" mode="outlined" value={bottomRight}
                             onChangeText={word => {setBottomRight(word)}}
                         />
                     </ScrollView>
