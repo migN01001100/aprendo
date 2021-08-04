@@ -9,9 +9,23 @@ import {
     TextInput,
     Appbar
 } from 'react-native-paper';
+import store from './redux/store';
+import * as actions from './redux/actions';
 
 export const AddWordScreen = ({navigation}) => {
-    
+    const [main, setMain] = React.useState('')
+    const [secondary, setSecondary] = React.useState('')
+    const [middle, setMiddle] = React.useState('')
+    const [msecondary, setMsecondary] = React.useState('')
+    const [topLeft, setTopLeft] = React.useState('')
+    const [topRight, setTopRight] = React.useState('')
+    const [bottomLeft, setBottomLeft] = React.useState('')
+    const [bottomRight, setBottomRight] = React.useState('')
+
+    React.useEffect(()=>{
+        console.log(store.getState())
+    })
+
     return (
         
             <View style={styles.father}>
@@ -21,18 +35,46 @@ export const AddWordScreen = ({navigation}) => {
                 </Appbar.Header>
                 <View style={styles.form}>
                     <ScrollView>
-                        <TextInput label="Main" mode="outlined" />
-                        <TextInput label="Secondary" mode="outlined" />
-                        <TextInput label="Middle" mode="outlined" />
-                        <TextInput label="Secondary" mode="outlined" />
-                        <TextInput label="Top Left" mode="outlined" />
-                        <TextInput label="Top Right" mode="outlined" />
-                        <TextInput label="Bottom Left" mode="outlined" />
-                        <TextInput label="Bottom Right" mode="outlined" />
+                        <TextInput label="Main" mode="outlined" value={main}
+                            onChangeText={word => {setMain(word)}}
+                        />
+                        <TextInput label="Secondary" mode="outlined" 
+                            onChangeText={word => {setSecondary(word)}}
+                        />
+                        <TextInput label="Middle" mode="outlined" 
+                            onChangeText={word => {setMiddle(word)}}
+                        />
+                        <TextInput label="Secondary" mode="outlined" 
+                            onChangeText={word => {setMsecondary(word)}}
+                        />
+                        <TextInput label="Top Left" mode="outlined" 
+                            onChangeText={word => {setTopLeft(word)}}
+                        />
+                        <TextInput label="Top Right" mode="outlined" 
+                            onChangeText={word => {setTopRight(word)}}
+                        />
+                        <TextInput label="Bottom Left" mode="outlined" 
+                            onChangeText={word => {setBottomLeft(word)}}
+                        />
+                        <TextInput label="Bottom Right" mode="outlined" 
+                            onChangeText={word => {setBottomRight(word)}}
+                        />
                     </ScrollView>
                 </View>
                 <View style={styles.bottomFab}>
-                    <FAB icon="check" onPress={()=> navigation.navigate('Home')}/>
+                    <FAB icon="check" onPress={
+                        ()=> {
+                            navigation.navigate('Home')
+                            store.dispatch(actions.addWord(main)(secondary)(middle)(msecondary)(topLeft)(topRight)(bottomLeft)(bottomRight))
+                            setMain("")
+                            setSecondary("")
+                            setMiddle("")
+                            setMsecondary("")
+                            setTopLeft("")
+                            setTopRight("")
+                            setBottomLeft("")
+                            setBottomRight("")
+                        }}/>
                 </View>
             </View>
         
