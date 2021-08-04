@@ -14,6 +14,7 @@ import * as actions from './redux/actions';
 
 export const AddWordScreen = ({navigation}) => {
     const [main, setMain] = React.useState('')
+    const [translation, setTranslation] = React.useState('')
     const [primary, setPrimary] = React.useState('')
     const [secondary, setSecondary] = React.useState('')
     const [middle, setMiddle] = React.useState('')
@@ -34,6 +35,9 @@ export const AddWordScreen = ({navigation}) => {
                     <ScrollView>
                         <TextInput label="Main" mode="outlined" value={main}
                             onChangeText={word => {setMain(word)}}
+                        />
+                        <TextInput label="Translation" mode="outlined" value={translation}
+                            onChangeText={word => {setTranslation(word)}}
                         />
                         <TextInput label="Primary" mode="outlined" value={primary}
                             onChangeText={word => {setPrimary(word)}}
@@ -65,8 +69,9 @@ export const AddWordScreen = ({navigation}) => {
                     <FAB icon="check" onPress={
                         ()=> {
                             navigation.navigate('Home')
-                            store.dispatch(actions.addWord(main)(primary)(secondary)(middle)(msecondary)(topLeft)(topRight)(bottomLeft)(bottomRight))
+                            store.dispatch(actions.addWord(main)(translation)(primary)(secondary)(middle)(msecondary)(topLeft)(topRight)(bottomLeft)(bottomRight))
                             setMain("")
+                            setTranslation("")
                             setPrimary("")
                             setSecondary("")
                             setMiddle("")
