@@ -11,6 +11,7 @@ import {
 } from 'react-native-paper';
 import store from './redux/store';
 import * as actions from './redux/actions';
+import realm from './database/realm';
 
 export const AddWordScreen = ({navigation}) => {
     const [main, setMain] = React.useState('')
@@ -80,11 +81,24 @@ export const AddWordScreen = ({navigation}) => {
                             setTopRight("")
                             setBottomLeft("")
                             setBottomRight("")
+                            addNewWord(main)
                         }}/>
                 </View>
             </View>
         
     )
+}
+
+const addNewWord = word => {
+    let random = Math.random().toString(9).substr(2,5);
+    realm.write(()=>{
+        realm.create("German",{
+            _id: parseInt(random),
+            word: word
+        });
+    const task = realm.objects("German")
+    console.log(`${task.map(task=>task.word)}`)
+    })
 }
 
 const styles = StyleSheet.create({

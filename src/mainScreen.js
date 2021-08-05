@@ -25,7 +25,6 @@ const FlashCards = () =>{
     const [list, setList] = React.useState([])
     store.subscribe(()=>{
         setList(store.getState())
-        console.log(store.getState())
     })
     return(
         <Carousel 
