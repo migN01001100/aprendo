@@ -1,3 +1,4 @@
+import { transform } from '@babel/core';
 import React from 'react';
 import {
     View, 
@@ -9,8 +10,6 @@ import {
     TextInput,
     Appbar
 } from 'react-native-paper';
-import store from './redux/store';
-import * as actions from './redux/actions';
 import realm from './database/realm';
 
 export const AddWordScreen = ({navigation}) => {
@@ -19,7 +18,7 @@ export const AddWordScreen = ({navigation}) => {
     const [primary, setPrimary] = React.useState('')
     const [secondary, setSecondary] = React.useState('')
     const [middle, setMiddle] = React.useState('')
-    const [msecondary, setMsecondary] = React.useState('')
+    const [mSecondary, setMsecondary] = React.useState('')
     const [topLeft, setTopLeft] = React.useState('')
     const [topRight, setTopRight] = React.useState('')
     const [bottomLeft, setBottomLeft] = React.useState('')
@@ -49,7 +48,7 @@ export const AddWordScreen = ({navigation}) => {
                         <TextInput label="Middle" mode="outlined" value={middle}
                             onChangeText={word => {setMiddle(word)}}
                         />
-                        <TextInput label="Secondary" mode="outlined" value={msecondary}
+                        <TextInput label="Secondary" mode="outlined" value={mSecondary}
                             onChangeText={word => {setMsecondary(word)}}
                         />
                         <TextInput label="Top Left" mode="outlined" value={topLeft}
@@ -69,8 +68,8 @@ export const AddWordScreen = ({navigation}) => {
                 <View style={styles.bottomFab}>
                     <FAB icon="check" onPress={
                         ()=> {
+                            addNewWord(main)(translation)(primary)(secondary)(middle)(mSecondary)(topLeft)(topRight)(bottomLeft)(bottomRight)
                             navigation.navigate('Home')
-                            store.dispatch(actions.addWord(main)(translation)(primary)(secondary)(middle)(msecondary)(topLeft)(topRight)(bottomLeft)(bottomRight))
                             setMain("")
                             setTranslation("")
                             setPrimary("")
@@ -80,24 +79,29 @@ export const AddWordScreen = ({navigation}) => {
                             setTopLeft("")
                             setTopRight("")
                             setBottomLeft("")
-                            setBottomRight("")
-                            addNewWord(main)
+                            setBottomRight("") 
                         }}/>
                 </View>
             </View>
         
     )
 }
-
-const addNewWord = word => {
+const addNewWord = word => translation => primary => secondary => middle => mSecondary => topLeft => topRight => bottomLeft => bottomRight => {
     let random = Math.random().toString(9).substr(2,5);
     realm.write(()=>{
         realm.create("German",{
             _id: parseInt(random),
-            word: word
+            word,
+            translation,
+            primary,
+            secondary,
+            middle,
+            mSecondary,
+            topLeft,
+            topRight,
+            bottomLeft,
+            bottomRight
         });
-    const task = realm.objects("German")
-    console.log(`${task.map(task=>task.word)}`)
     })
 }
 
