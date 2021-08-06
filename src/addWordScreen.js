@@ -14,6 +14,7 @@ import realm from './database/realm';
 
 export const AddWordScreen = ({navigation}) => {
     const [main, setMain] = React.useState('')
+    const [category, setCategory] = React.useState('')
     const [translation, setTranslation] = React.useState('')
     const [primary, setPrimary] = React.useState('')
     const [secondary, setSecondary] = React.useState('')
@@ -35,6 +36,9 @@ export const AddWordScreen = ({navigation}) => {
                     <ScrollView>
                         <TextInput label="Main" mode="outlined" value={main}
                             onChangeText={word => {setMain(word)}}
+                        />
+                        <TextInput label="category" mode="outlined" value={category}
+                            onChangeText={word => {setCategory(word)}}
                         />
                         <TextInput label="Translation" mode="outlined" value={translation}
                             onChangeText={word => {setTranslation(word)}}
@@ -68,7 +72,7 @@ export const AddWordScreen = ({navigation}) => {
                 <View style={styles.bottomFab}>
                     <FAB icon="check" onPress={
                         ()=> {
-                            addNewWord(main)(translation)(primary)(secondary)(middle)(mSecondary)(topLeft)(topRight)(bottomLeft)(bottomRight)
+                            addNewWord(main)(category)(translation)(primary)(secondary)(middle)(mSecondary)(topLeft)(topRight)(bottomLeft)(bottomRight)
                             navigation.navigate('Home')
                             setMain("")
                             setTranslation("")
@@ -86,12 +90,13 @@ export const AddWordScreen = ({navigation}) => {
         
     )
 }
-const addNewWord = word => translation => primary => secondary => middle => mSecondary => topLeft => topRight => bottomLeft => bottomRight => {
+const addNewWord = word => category => translation => primary => secondary => middle => mSecondary => topLeft => topRight => bottomLeft => bottomRight => {
     let random = Math.random().toString(9).substr(2,5);
     realm.write(()=>{
         realm.create("German",{
             _id: parseInt(random),
             word,
+            category,
             translation,
             primary,
             secondary,
