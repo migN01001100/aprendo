@@ -1,15 +1,6 @@
-import { transform } from '@babel/core';
 import React from 'react';
-import {
-    View, 
-    StyleSheet, 
-    ScrollView
-} from 'react-native';
-import {
-    FAB,
-    TextInput,
-    Appbar
-} from 'react-native-paper';
+import { View, StyleSheet, ScrollView } from 'react-native';
+import { FAB, TextInput, Appbar, Chip } from 'react-native-paper';
 import realm from './database/realm';
 
 export const AddWordScreen = ({navigation}) => {
@@ -24,6 +15,7 @@ export const AddWordScreen = ({navigation}) => {
     const [topRight, setTopRight] = React.useState('')
     const [bottomLeft, setBottomLeft] = React.useState('')
     const [bottomRight, setBottomRight] = React.useState('')
+    const [chip, setChip] = React.useState([])
 
     return (
         
@@ -37,8 +29,26 @@ export const AddWordScreen = ({navigation}) => {
                         <TextInput label="Main" mode="outlined" value={main}
                             onChangeText={word => {setMain(word)}}
                         />
+                        <ScrollView horizontal={true} >
+                            {chip.map(item=>
+                            <Chip 
+                                key={item + "_" + Math.random().toString().substr(2,2)}
+                                onClose={()=>{
+                                    const set = new Set(chip)
+                                    set.delete(item)
+                                    setChip(Array.from(set))
+                                }}
+                            >{item}</Chip>
+                            )}
+                        </ScrollView>
                         <TextInput label="category" mode="outlined" value={category}
                             onChangeText={word => {setCategory(word)}}
+                            onEndEditing={()=>{
+                                if(category !== ""){
+                                    setChip([...chip,category])
+                                    setCategory('')
+                                }
+                            }}
                         />
                         <TextInput label="Translation" mode="outlined" value={translation}
                             onChangeText={word => {setTranslation(word)}}
