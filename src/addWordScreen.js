@@ -1,11 +1,18 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
-import { FAB, TextInput, Appbar, Chip } from 'react-native-paper';
+import { View, StyleSheet, ScrollView, Animated, SafeAreaView} from 'react-native';
+import { FAB, TextInput, Appbar, Chip, Snackbar, IconButton, Caption } from 'react-native-paper';
 import realm from './database/realm';
 
+const colors ={
+    blue:'#0066ff',
+    red:'#ff0000',
+    green:'#33cc33',
+    gray:'#e6e6e6'
+}
 export const AddWordScreen = ({navigation}) => {
     const [main, setMain] = React.useState('')
     const [category, setCategory] = React.useState('')
+    const [color, setColor] = React.useState('')
     const [translation, setTranslation] = React.useState('')
     const [primary, setPrimary] = React.useState('')
     const [secondary, setSecondary] = React.useState('')
@@ -16,7 +23,100 @@ export const AddWordScreen = ({navigation}) => {
     const [bottomLeft, setBottomLeft] = React.useState('')
     const [bottomRight, setBottomRight] = React.useState('')
     const [chip, setChip] = React.useState([])
+    const [warn, setWarn] = React.useState(false)
 
+    const animBlue = React.useRef(new Animated.Value(0)).current;
+    const animRed = React.useRef(new Animated.Value(0)).current;
+    const animGreen = React.useRef(new Animated.Value(0)).current;
+    const animGray = React.useRef(new Animated.Value(0)).current;
+    const selectBlue = () => {
+        Animated.timing(animBlue,{
+            toValue:1,
+            duration:300,
+            useNativeDriver:true
+        }).start();
+        Animated.timing(animRed,{
+            toValue:0,
+            duration:300,
+            useNativeDriver:true
+        }).start();
+        Animated.timing(animGreen,{
+            toValue:0,
+            duration:300,
+            useNativeDriver:true
+        }).start();
+        Animated.timing(animGray,{
+            toValue:0,
+            duration:300,
+            useNativeDriver:true
+        }).start();
+    }
+    const selectRed = () => {
+        Animated.timing(animRed,{
+            toValue:1,
+            duration:300,
+            useNativeDriver:true
+        }).start();
+        Animated.timing(animBlue,{
+            toValue:0,
+            duration:300,
+            useNativeDriver:true
+        }).start();
+        Animated.timing(animGreen,{
+            toValue:0,
+            duration:300,
+            useNativeDriver:true
+        }).start();
+        Animated.timing(animGray,{
+            toValue:0,
+            duration:300,
+            useNativeDriver:true
+        }).start();
+    }
+    const selectGreen = () => {
+        Animated.timing(animGreen,{
+            toValue:1,
+            duration:300,
+            useNativeDriver:true
+        }).start();
+        Animated.timing(animRed,{
+            toValue:0,
+            duration:300,
+            useNativeDriver:true
+        }).start();
+        Animated.timing(animBlue,{
+            toValue:0,
+            duration:300,
+            useNativeDriver:true
+        }).start();
+        Animated.timing(animGray,{
+            toValue:0,
+            duration:300,
+            useNativeDriver:true
+        }).start();
+    }
+    const selectGray = () => {
+        Animated.timing(animGray,{
+            toValue:1,
+            duration:300,
+            useNativeDriver:true
+        }).start();
+        Animated.timing(animRed,{
+            toValue:0,
+            duration:300,
+            useNativeDriver:true
+        }).start();
+        Animated.timing(animBlue,{
+            toValue:0,
+            duration:300,
+            useNativeDriver:true
+        }).start();
+        Animated.timing(animGreen,{
+            toValue:0,
+            duration:300,
+            useNativeDriver:true
+        }).start();
+    }
     return (
         
             <View style={styles.father}>
@@ -24,8 +124,12 @@ export const AddWordScreen = ({navigation}) => {
                     <Appbar.BackAction onPress={()=>navigation.goBack()}/>
                     <Appbar.Content title="Add a new word" />
                 </Appbar.Header>
+                <Notification
+                    state={warn}
+                    dismiss={()=>setWarn(false)}
+                />
                 <View style={styles.form}>
-                    <ScrollView>
+                    <ScrollView style={styles.main}>
                         <TextInput label="Main" mode="outlined" value={main}
                             onChangeText={word => {setMain(word)}}
                         />
@@ -50,6 +154,17 @@ export const AddWordScreen = ({navigation}) => {
                                 }
                             }}
                         />
+                        <Caption>Pick a gender</Caption>
+                            <ScrollView horizontal={true}>
+                                <Animated.View style={[styles.animatedBlue, {opacity:animBlue}]} ></Animated.View>
+                                <IconButton icon="circle" color={colors.blue} onPress={()=>{selectBlue()} } />
+                                <Animated.View style={[styles.animatedRed, {opacity:animRed}]} ></Animated.View>
+                                <IconButton icon="circle" color={colors.red} onPress={()=>{selectRed()} } />
+                                <Animated.View style={[styles.animatedGreen, {opacity:animGreen}]} ></Animated.View>
+                                <IconButton icon="circle" color={colors.green} onPress={()=>{selectGreen()} } />
+                                    <Animated.View style={[styles.animatedGray, {opacity:animGray}]} ></Animated.View>
+                                <IconButton icon="circle" color={colors.gray} onPress={()=>{selectGray()} } />
+                            </ScrollView>
                         <TextInput label="Translation" mode="outlined" value={translation}
                             onChangeText={word => {setTranslation(word)}}
                         />
@@ -82,9 +197,14 @@ export const AddWordScreen = ({navigation}) => {
                 <View style={styles.bottomFab}>
                     <FAB icon="check" onPress={
                         ()=> {
-                            addNewWord(main)(category)(translation)(primary)(secondary)(middle)(mSecondary)(topLeft)(topRight)(bottomLeft)(bottomRight)
+                            if (main == ""){
+                                setWarn(true)
+                            }else{
+                            addNewWord(main)(chip)(color)(translation)(primary)(secondary)(middle)(mSecondary)(topLeft)(topRight)(bottomLeft)(bottomRight)
                             navigation.navigate('Home')
                             setMain("")
+                            setChip([])
+                            setColor("")
                             setTranslation("")
                             setPrimary("")
                             setSecondary("")
@@ -93,20 +213,22 @@ export const AddWordScreen = ({navigation}) => {
                             setTopLeft("")
                             setTopRight("")
                             setBottomLeft("")
-                            setBottomRight("") 
+                            setBottomRight("")
+                            }
                         }}/>
                 </View>
             </View>
         
     )
 }
-const addNewWord = word => category => translation => primary => secondary => middle => mSecondary => topLeft => topRight => bottomLeft => bottomRight => {
+const addNewWord = word => category => color => translation => primary => secondary => middle => mSecondary => topLeft => topRight => bottomLeft => bottomRight => {
     let random = Math.random().toString(9).substr(2,5);
     realm.write(()=>{
         realm.create("German",{
             _id: parseInt(random),
             word,
             category,
+            color,
             translation,
             primary,
             secondary,
@@ -120,7 +242,21 @@ const addNewWord = word => category => translation => primary => secondary => mi
     })
 }
 
+const Notification = props =>{
+    return(
+        <Snackbar
+            visible={props.state}
+            onDismiss={props.dismiss}
+        >
+            There is no word to add.
+        </Snackbar>
+    )
+}
+
 const styles = StyleSheet.create({
+    main:{
+        marginBottom:100
+    },
     father:{
         flex: 1
     },
@@ -133,5 +269,52 @@ const styles = StyleSheet.create({
         margin: 16,
         right: 0,
         bottom: 0
+    },
+    color:{
+        color:'#ff0000'
+    },
+    animatedBlue:{
+        position:'absolute',
+        top:9.3,
+        left:9.3,
+        borderColor:'#0047b3',
+        borderRadius:50,
+        borderStyle:'solid',
+        borderWidth:5,
+        width:30,
+        height:30
+    },
+    animatedRed:{
+        position:'absolute',
+        top:9.3,
+        left:57.5,
+        borderColor:'#b30000',
+        borderRadius:50,
+        borderStyle:'solid',
+        borderWidth:5,
+        width:30,
+        height:30
+    },
+    animatedGreen:{
+        position:'absolute',
+        top:9.3,
+        right:56.7,
+        borderColor:'#00802b',
+        borderRadius:50,
+        borderStyle:'solid',
+        borderWidth:5,
+        width:30,
+        height:30
+    },
+    animatedGray:{
+        position:'absolute',
+        top:9.3,
+        right:8.7,
+        borderColor:'#808080',
+        borderRadius:50,
+        borderStyle:'solid',
+        borderWidth:5,
+        width:30,
+        height:30
     }
   });

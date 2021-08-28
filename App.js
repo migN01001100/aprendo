@@ -33,18 +33,18 @@ const App = ({navigation}) => {
   })
 
   return (
-    <PaperProvider theme={paperTheme}>
-      <NavigationContainer theme={navigationTheme}>
-          <Drawer.Navigator drawerContent={()=>
-          <ItemsDrawer 
-          themeIco={theme?"weather-sunny":"weather-night"}
-          action={()=>{theme?setTheme(false):setTheme(true)}}/>
-          }>
-            <Drawer.Screen name="Home" component={Main} />
-            <Drawer.Screen name="Add" component={AddWordScreen} />
-          </Drawer.Navigator>
-      </NavigationContainer>
-    </PaperProvider>
+      <PaperProvider theme={paperTheme}>
+        <NavigationContainer theme={navigationTheme}>
+            <Drawer.Navigator drawerContent={()=>
+            <ItemsDrawer 
+            themeIco={theme?"weather-sunny":"weather-night"}
+            action={()=>{theme?setTheme(false):setTheme(true)}}/>
+            }>
+              <Drawer.Screen name="Home" component={Main} />
+              <Drawer.Screen name="Add" component={AddWordScreen} />
+            </Drawer.Navigator>
+        </NavigationContainer>
+      </PaperProvider>
   );
 };
 

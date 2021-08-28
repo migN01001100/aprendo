@@ -5,6 +5,8 @@ const TaskShema = {
     properties:{
         _id:"int",
         word:"string",
+        category:"string[]",
+        color:"string",
         translation:"string",
         primary:"string",
         secondary:"string",
@@ -30,7 +32,7 @@ const Config = {
 
 const realm = new Realm({
     schema:[TaskShema],
-    schemaVersion:1
+    schemaVersion:3
 })
 
 export default realm;

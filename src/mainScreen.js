@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, AppState} from 'react-native';
+import { View, StyleSheet, AppState } from 'react-native';
 import {FAB, Appbar, Text, Title, Caption, Card} from  'react-native-paper';
 import {DrawerActions} from '@react-navigation/native';
 import Carousel from 'react-native-snap-carousel';
@@ -12,16 +12,17 @@ const config ={
 }
 
 const state = realm.objects(config.db).length // check db for data to update once at the beginnig
+let id = 0
 
 const Main = ({navigation}) => {
   const [list, setList] = React.useState()
-
+  
   const _handleState = ()=>{
     if (AppState.currentState.match(/inactive|background/)){
       console.log("inactive")
     }else{
       if(!config.state && state > 0){
-        setList(realm.objects(config.db))
+        setList(Array.from(realm.objects(config.db)))
         config.state = true
         console.log("no empty")
       }
@@ -31,9 +32,9 @@ const Main = ({navigation}) => {
 
   React.useEffect(()=>{
     AppState.addEventListener("change", _handleState)
-  },)
+  })
     realm.addListener("change",()=>{
-      setList(realm.objects(config.db))
+      setList(Array.from(realm.objects(config.db)))
       console.log(list)
     })  
     return(
@@ -61,9 +62,11 @@ const FlashCards = props =>(
         />
 )
 
-const dataCards = ({item}) =>(
+const dataCards = ({item}) =>{
+
+  return(
         <View style={styles.container} key={item._id}>
-            <Card style={styles.card} onLongPress={()=>{console.log("long press")}}>
+            <Card style={styles.card} onLongPress={()=>{ id = item._id }}>
                 <Title style={styles.word}>{item.word}</Title>
                 <Caption style={styles.primary}>{item.primary}</Caption>
                 <Caption style={styles.secondary}>{item.secondary}</Caption>
@@ -75,7 +78,8 @@ const dataCards = ({item}) =>(
                 <Text style={styles.bottomRight}>{item.bottomRight}</Text>
             </Card>
         </View>
-    )
+  )
+}
 
 const styles = StyleSheet.create({
     mainContainer:{
