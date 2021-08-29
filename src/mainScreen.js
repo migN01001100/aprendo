@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, StyleSheet, AppState } from 'react-native';
-import {FAB, Appbar, Text, Title, Caption, Card} from  'react-native-paper';
+import { View, StyleSheet, AppState, Text } from 'react-native';
+import {FAB, Appbar, IconButton} from  'react-native-paper';
 import {DrawerActions} from '@react-navigation/native';
 import Carousel from 'react-native-snap-carousel';
 import realm from './database/realm';
@@ -61,22 +61,24 @@ const FlashCards = props =>(
         itemWidth={600}
         />
 )
-
+//All components in this section must be out of react paper to avoid buging
+//due to paper's incompatibility them with native animation Driver setted true.
 const dataCards = ({item}) =>{
 
   return(
         <View style={styles.container} key={item._id}>
-            <Card style={styles.card} onLongPress={()=>{ id = item._id }}>
-                <Title style={styles.word}>{item.word}</Title>
-                <Caption style={styles.primary}>{item.primary}</Caption>
-                <Caption style={styles.secondary}>{item.secondary}</Caption>
+            <View style={styles.card} onLongPress={()=>{ id = item._id }}>
+                <Text style={styles.word}>{item.word}</Text>
+                <IconButton style={styles.gender} icon="circle" color={item.color?item.color:'#e6e6e6'} />
+                <Text style={styles.primary}>{item.primary}</Text>
+                <Text style={styles.secondary}>{item.secondary}</Text>
                 <Text style={styles.topLeft}>{item.topLeft}</Text>
                 <Text style={styles.bottomLeft}>{item.bottomLeft}</Text>
                 <Text style={styles.topRight}>{item.topRight}</Text>
-                <Caption style={styles.plural}>{item.mSecondary}</Caption>
+                <Text style={styles.plural}>{item.mSecondary}</Text>
                 <Text style={styles.middle}>{item.middle}</Text>
                 <Text style={styles.bottomRight}>{item.bottomRight}</Text>
-            </Card>
+            </View>
         </View>
   )
 }
@@ -100,13 +102,20 @@ const styles = StyleSheet.create({
         height:250,
         borderRadius:10,
         borderTopEndRadius:100,
-        marginLeft:22
+        marginLeft:22,
+        backgroundColor:'#fffff5'
       },
       word:{
         position:'relative',
         paddingTop:'30%',
         paddingLeft:10,
-        fontSize:25
+        fontSize:25,
+        fontWeight:'bold'
+      },
+      gender:{
+        position:'absolute',
+        left:90,
+        top: 40
       },
       primary:{
         position:'relative',

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView, Animated, SafeAreaView} from 'react-native';
+import { View, StyleSheet, ScrollView, Animated } from 'react-native';
 import { FAB, TextInput, Appbar, Chip, Snackbar, IconButton, Caption } from 'react-native-paper';
 import realm from './database/realm';
 
@@ -9,7 +9,7 @@ const colors ={
     green:'#33cc33',
     gray:'#e6e6e6'
 }
-let color = ''
+let color = '' //save color for DB
 export const AddWordScreen = ({navigation}) => {
     const [main, setMain] = React.useState('')
     const [category, setCategory] = React.useState('')
@@ -34,88 +34,88 @@ export const AddWordScreen = ({navigation}) => {
         Animated.timing(animBlue,{
             toValue:1,
             duration:300,
-            useNativeDriver:true
+            useNativeDriver:false
         }).start();
         Animated.timing(animRed,{
             toValue:0,
             duration:300,
-            useNativeDriver:true
+            useNativeDriver:false
         }).start();
         Animated.timing(animGreen,{
             toValue:0,
             duration:300,
-            useNativeDriver:true
+            useNativeDriver:false
         }).start();
         Animated.timing(animGray,{
             toValue:0,
             duration:300,
-            useNativeDriver:true
+            useNativeDriver:false
         }).start();
     }
     const selectRed = () => {
         Animated.timing(animRed,{
             toValue:1,
             duration:300,
-            useNativeDriver:true
+            useNativeDriver:false
         }).start();
         Animated.timing(animBlue,{
             toValue:0,
             duration:300,
-            useNativeDriver:true
+            useNativeDriver:false
         }).start();
         Animated.timing(animGreen,{
             toValue:0,
             duration:300,
-            useNativeDriver:true
+            useNativeDriver:false
         }).start();
         Animated.timing(animGray,{
             toValue:0,
             duration:300,
-            useNativeDriver:true
+            useNativeDriver:false
         }).start();
     }
     const selectGreen = () => {
         Animated.timing(animGreen,{
             toValue:1,
             duration:300,
-            useNativeDriver:true
+            useNativeDriver:false
         }).start();
         Animated.timing(animRed,{
             toValue:0,
             duration:300,
-            useNativeDriver:true
+            useNativeDriver:false
         }).start();
         Animated.timing(animBlue,{
             toValue:0,
             duration:300,
-            useNativeDriver:true
+            useNativeDriver:false
         }).start();
         Animated.timing(animGray,{
             toValue:0,
             duration:300,
-            useNativeDriver:true
+            useNativeDriver:false
         }).start();
     }
     const selectGray = () => {
         Animated.timing(animGray,{
             toValue:1,
             duration:300,
-            useNativeDriver:true
+            useNativeDriver:false
         }).start();
         Animated.timing(animRed,{
             toValue:0,
             duration:300,
-            useNativeDriver:true
+            useNativeDriver:false
         }).start();
         Animated.timing(animBlue,{
             toValue:0,
             duration:300,
-            useNativeDriver:true
+            useNativeDriver:false
         }).start();
         Animated.timing(animGreen,{
             toValue:0,
             duration:300,
-            useNativeDriver:true
+            useNativeDriver:false
         }).start();
     }
     return (

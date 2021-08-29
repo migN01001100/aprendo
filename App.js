@@ -13,28 +13,28 @@ import { AddWordScreen } from './src/addWordScreen';
 import Main from './src/mainScreen';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import { ItemsDrawer } from './src/drawerSection';
+import merge from 'deepmerge';
 
 const Drawer = createDrawerNavigator();
+const combinedDefaultTheme = merge(PaperDefaultTheme,NavigationDefaultTheme);
+const combinedDarkTheme = merge(PaperDarkTheme, NavigationDarkTheme);
 
 const App = ({navigation}) => {
   const [theme, setTheme] = React.useState(false)
-  const [paperTheme, setPaperTheme] = React.useState(PaperDefaultTheme);
-  const [navigationTheme, setNavigationTheme] = React.useState(NavigationDefaultTheme)
+  const [switchTheme, setSwitchTheme] = React.useState(combinedDefaultTheme);
   
-  React.useEffect(()=>{
+  React.useLayoutEffect(()=>{
     if(theme){
-      setPaperTheme(PaperDarkTheme)
-      setNavigationTheme(NavigationDarkTheme)
+      setSwitchTheme(combinedDarkTheme)
     }
     else{
-      setPaperTheme(PaperDefaultTheme)
-      setNavigationTheme(NavigationDefaultTheme)
+      setSwitchTheme(combinedDefaultTheme)
     }
   })
 
   return (
-      <PaperProvider theme={paperTheme}>
-        <NavigationContainer theme={navigationTheme}>
+      <PaperProvider theme={switchTheme}>
+        <NavigationContainer theme={switchTheme}>
             <Drawer.Navigator drawerContent={()=>
             <ItemsDrawer 
             themeIco={theme?"weather-sunny":"weather-night"}
