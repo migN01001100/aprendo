@@ -45,7 +45,7 @@ const Main = ({navigation}) => {
                 </Appbar.Header>
                 <FlashCards list={list} />
             <View style={styles.bottomFab}>
-                <FAB icon="plus" onPress={()=> navigation.navigate('Add')}/>
+                <FAB icon="plus" onPress={()=> navigation.navigate('Word')}/>
             </View>
         </View>
     )   
@@ -61,13 +61,13 @@ const FlashCards = props =>(
         itemWidth={600}
         />
 )
-//All components in this section must be out of react paper to avoid buging
+//All components attached to theme changin in this section must be out of react paper to avoid buging
 //due to paper's incompatibility them with native animation Driver setted true.
 const dataCards = ({item}) =>{
 
   return(
         <View style={styles.container} key={item._id}>
-            <View style={styles.card} onLongPress={()=>{ id = item._id }}>
+            <View style={styles.card}>
                 <Text style={styles.word}>{item.word}</Text>
                 <IconButton style={styles.gender} icon="circle" color={item.color?item.color:'#e6e6e6'} />
                 <Text style={styles.primary}>{item.primary}</Text>
@@ -78,11 +78,25 @@ const dataCards = ({item}) =>{
                 <Text style={styles.plural}>{item.mSecondary}</Text>
                 <Text style={styles.middle}>{item.middle}</Text>
                 <Text style={styles.bottomRight}>{item.bottomRight}</Text>
+                <IconButton style={styles.modify} color='#00dac4' icon="square-edit-outline" onPress={()=>modifyWord(item._id)} />
+                <IconButton style={styles.delete} color='#00dac4' icon="close-outline" onPress={()=>deleteWord(item._id)} />
             </View>
         </View>
   )
 }
 
+const modifyWord = item => {
+  console.log(item)
+}
+
+const deleteWord = item => {
+    const _item = realm.objectForPrimaryKey(config.db, item)
+    console.log(_item)
+    realm.write(()=>{
+      realm.delete(_item)
+    })
+  
+}
 const styles = StyleSheet.create({
     mainContainer:{
         flex: 1
@@ -106,7 +120,7 @@ const styles = StyleSheet.create({
         backgroundColor:'#fffff5'
       },
       word:{
-        position:'relative',
+        position:'absolute',
         paddingTop:'30%',
         paddingLeft:10,
         fontSize:25,
@@ -114,58 +128,69 @@ const styles = StyleSheet.create({
       },
       gender:{
         position:'absolute',
-        left:90,
-        top: 40
+        left:100,
+        top: 70
       },
       primary:{
-        position:'relative',
+        position:'absolute',
         fontSize:20,
         left:50,
-        bottom:50
+        top:90
       },
       secondary:{
-        position:'relative',
+        position:'absolute',
         fontSize:20,
-        left:40,
-        bottom:30
+        left:30,
+        bottom:90
       },
       topLeft:{
-        position:'relative',
+        position:'absolute',
         fontSize:20,
-        bottom:185,
+        top:10,
         left: 10
       },
       bottomLeft:{
-        position:'relative',
+        position:'absolute',
         fontSize:20,
         bottom:10,
         left:10
       },
       topRight:{
-        position:'relative',
+        position:'absolute',
         fontSize:20,
-        bottom:230,
-        left: 210
+        top:10,
+        left: 200
       },
       plural:{
-        position:'relative',
+        position:'absolute',
         fontSize:20,
         bottom:165,
         paddingLeft:210,
         fontSize:15
       },
       middle:{
-        position:'relative',
+        position:'absolute',
         fontSize:20,
-        bottom:198,
-        paddingLeft:210,
-        fontSize:20
+        top:105,
+        fontSize:20,
+        left:200
+        
       },
       bottomRight:{
-        position:'relative',
+        position:'absolute',
         fontSize:20,
-        bottom:120,
-        left:210
+        bottom:10,
+        left:200
+      },
+      modify:{
+        position:'absolute',
+        bottom:1,
+        right:1
+      },
+      delete:{
+        position:'absolute',
+        bottom:1,
+        left:1
       }
   });
 

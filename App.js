@@ -9,7 +9,7 @@ import {
   Provider as PaperProvider
 } from 'react-native-paper'
 import React from 'react';
-import { AddWordScreen } from './src/addWordScreen';
+import {WordScreen} from './src/wordScreen';
 import Main from './src/mainScreen';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import { ItemsDrawer } from './src/drawerSection';
@@ -41,7 +41,7 @@ const App = ({navigation}) => {
             action={()=>{theme?setTheme(false):setTheme(true)}}/>
             }>
               <Drawer.Screen name="Home" component={Main} />
-              <Drawer.Screen name="Add" component={AddWordScreen} />
+              <Drawer.Screen name="Word" component={WordScreen} />
             </Drawer.Navigator>
         </NavigationContainer>
       </PaperProvider>

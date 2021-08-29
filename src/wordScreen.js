@@ -10,7 +10,7 @@ const colors ={
     gray:'#e6e6e6'
 }
 let color = '' //save color for DB
-export const AddWordScreen = ({navigation}) => {
+export const WordScreen = ({navigation}) => {
     const [main, setMain] = React.useState('')
     const [category, setCategory] = React.useState('')
     
