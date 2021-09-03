@@ -1,59 +1,131 @@
 import React from 'react';
 import { View, StyleSheet, AppState, TextInput, Animated} from 'react-native';
-import {FAB, Appbar, IconButton} from  'react-native-paper';
+import {FAB, Appbar, IconButton, Portal} from  'react-native-paper';
 import {DrawerActions} from '@react-navigation/native';
 import Carousel from 'react-native-snap-carousel';
-import realm from './database/realm';
+import {realm, initConfig} from './database/realm';
 
-const config ={
-  state:false, //update db once at the beginnig
-  db:"German", //Set Initial db name
-  filter: "verbs" //Set filter
+// check first Config initialization
+const initDB = ()=>{
+  if (realm.objects("Config").length === 0){
+    initConfig()
+    console.log("Initialized DB")
+  }else{
+    console.log("Not initialized DB")
+  }
 }
-
+const init = initDB() // initialize DB
+export const config = realm.objects("Config")[0] //set configuration to the app
 const state = realm.objects(config.db).length // check db for data to update once at the beginnig
-let id = 0
+config.state = false
 
+//filter words
+let tempList = []
+const _selectObjects = ()=>{
+  tempList =[]
+  const objects = realm.objects(config.db)
+  objects.map(hasit=>{
+    let array = hasit.category
+    array.map(each=>{
+      if(each === config.filter){
+        tempList.push(hasit)
+      }
+    })
+  })
+}
 const Main = ({navigation}) => {
-  const [list, setList] = React.useState()
+  const [list, setList] = React.useState()  //always use it to control data-carousel 
+  const [stateFab, setStateFab] = React.useState(false)
+  const [ref, setRef] = React.useState()
+  const [pointerA, setPointerA] = React.useState() //helps to calculate index of item
+  const [pointerB, setPointerB] = React.useState() //helps to calculate index of item
+
+  const onStateChange = ()=>{
+    if(stateFab){
+      setStateFab(false)
+    }else{
+      setStateFab(true)
+    }
+  }
 
   const _handleState = ()=>{
     if (AppState.currentState.match(/inactive|background/)){
       console.log("inactive")
     }else{
       if(!config.state && state > 0){
-        setList(Array.from(realm.objects(config.db)))
-        config.state = true
+        _selectObjects()
+        setList(tempList)   // if state db has data and you beggin the app set initial list data
+        config.state = true // once list is setted don't come back here
+        console.log("once entered!")
       }
       console.log("active")
     }
   }
 
   React.useEffect(()=>{
-    return AppState.addEventListener("change", _handleState)
-  })
+    AppState.addEventListener("change", _handleState)
+
     realm.addListener("change",()=>{
-        setList(Array.from(realm.objects(config.db)))
-        //console.log(list)
-    })  
+      _selectObjects()
+      setList(tempList)   // on db changes reset list
+    }) 
+  })
+     
+  const _calculateRef = tag =>{
+    if(pointerA<pointerB){
+      console.log(list[pointerB])
+    }else if(pointerA === undefined){
+      console.log(list[0])
+    }else{
+      console.log(list[pointerB])
+    }
+  }
     return(
         <View style={styles.mainContainer}>
-                <Appbar.Header>
-                    <Appbar.Action icon="menu" onPress={()=>navigation.dispatch(DrawerActions.openDrawer())} />
-                    <Appbar.Content title={config.db} subtitle={config.filter}/>
-                </Appbar.Header>
-                <Carousel
-                  layout={'tinder'} 
-                  layoutCardOffset={15}
-                  data={list?list:[]}
-                  renderItem={DataCards}
-                  sliderWidth={400}
-                  itemWidth={600}
-                  />
-            <View style={styles.bottomFab}>
-                <FAB icon="plus" onPress={()=> navigation.navigate('Word')}/>
-            </View>
+          <Appbar.Header>
+              <Appbar.Action icon="menu" onPress={()=>navigation.dispatch(DrawerActions.openDrawer())} />
+              <Appbar.Content title={config.db} subtitle={config.filter}/>
+          </Appbar.Header>
+          <Carousel
+            ref={ref=>setRef(ref)}
+            layout={'tinder'} 
+            layoutCardOffset={15}
+            data={list?list:[]}
+            renderItem={DataCards}
+            sliderWidth={400}
+            itemWidth={600}
+            onBeforeSnapToItem={()=>setPointerA(ref.currentIndex)}
+            onSnapToItem={()=>setPointerB(ref.currentIndex)}
+            lockScrollWhileSnapping={false}
+            />
+            <Portal>
+              <FAB.Group
+                open={stateFab}
+                icon={stateFab ? 'feather' : 'desk'}
+                actions={[
+                  { icon: 'plus', onPress: () => {
+                    navigation.navigate('Word')
+                  } },
+                  {
+                    icon: 'brain',
+                    label: 'Studying',
+                    onPress: () => _calculateRef('studying'),
+                  },
+                  {
+                    icon: 'bookshelf',
+                    label: 'Learnt',
+                    onPress: () => _calculateRef('learnt'),
+                  },
+                ]}
+                onStateChange={onStateChange}
+                onPress={() => {
+                  if (stateFab) {
+                  }
+                }}
+              />
+            </Portal>
         </View>
+       
     )   
 }
 
@@ -389,10 +461,10 @@ const returnColorGray = () =>{
             setOpenColor(false)
             _changeWord(props._id)(active)(word)(primary)(secondary)(topLeft)(bottomLeft)(topRight)(mSecondary)(middle)(bottomRight)(color)
           }} />
-          <Appbar.Action style={styles.delete} color='#00dac4' icon="close-outline" 
+          {active?<Appbar.Action style={styles.delete} color='#00dac4' icon="close" 
           onPress={()=>{
             _deleteWord(props._id)
-            }} />
+            }} />:<View/>}
       </View>
     </View>
   )
@@ -528,8 +600,8 @@ const styles = StyleSheet.create({
       },
       delete:{
         position:'absolute',
-        bottom:1,
-        left:1
+        bottom:0,
+        left:0
       },
       colorContainer:{
         flex: 1

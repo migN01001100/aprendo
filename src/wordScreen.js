@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView, Animated } from 'react-native';
 import { FAB, TextInput, Appbar, Chip, Snackbar, IconButton, Caption } from 'react-native-paper';
-import realm from './database/realm';
+import {realm} from './database/realm';
 
 const colors ={
     blue:'#0066ff',
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         margin: 16,
         right: 0,
-        bottom: 0
+        top: 0
     },
     color:{
         color:'#ff0000'

@@ -10,6 +10,7 @@ import {
 } from 'react-native-paper'
 import React from 'react';
 import {WordScreen} from './src/wordScreen';
+import {FilterScreen} from './src/filterScreen';
 import Main from './src/mainScreen';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import { ItemsDrawer } from './src/drawerSection';
@@ -19,7 +20,7 @@ const Drawer = createDrawerNavigator();
 const combinedDefaultTheme = merge(PaperDefaultTheme,NavigationDefaultTheme);
 const combinedDarkTheme = merge(PaperDarkTheme, NavigationDarkTheme);
 
-const App = ({navigation}) => {
+const App = () => {
   const [theme, setTheme] = React.useState(false)
   const [switchTheme, setSwitchTheme] = React.useState(combinedDefaultTheme);
   
@@ -35,13 +36,15 @@ const App = ({navigation}) => {
   return (
       <PaperProvider theme={switchTheme}>
         <NavigationContainer theme={switchTheme}>
-            <Drawer.Navigator drawerContent={()=>
+            <Drawer.Navigator initialRouteName="Home" drawerContent={({navigation})=>
             <ItemsDrawer 
             themeIco={theme?"weather-sunny":"weather-night"}
-            action={()=>{theme?setTheme(false):setTheme(true)}}/>
+            action={()=>{theme?setTheme(false):setTheme(true)}}
+            navigation={navigation}/>
             }>
               <Drawer.Screen name="Home" component={Main} />
               <Drawer.Screen name="Word" component={WordScreen} />
+              <Drawer.Screen name="Filter" component={FilterScreen} />
             </Drawer.Navigator>
         </NavigationContainer>
       </PaperProvider>

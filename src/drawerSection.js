@@ -11,8 +11,9 @@ import {
 } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
 
-export const ItemsDrawer = (props) => {
+export const ItemsDrawer = props => {
     
+
     return(
         <PaperDrawer.Section style={styles.drawer}>
             <Appbar.Action icon={props.themeIco} onPress={props.action} style={styles.themeIco} color="#a7a7a7" />
@@ -33,9 +34,10 @@ export const ItemsDrawer = (props) => {
             </Drawer.Section>
             </PaperDrawer.Section>
             <PaperDrawer.Section style={styles.drawerSection}>
-                <PaperDrawer.Item icon="account-settings" label="User" onPress={()=>{}}/>
-                <PaperDrawer.Item icon="tune" label="Settings" onPress={()=>{}}/>
-                <PaperDrawer.Item icon="star" label="Favorites" onPress={()=>{}}/>
+                <PaperDrawer.Item icon="earth" label="Language" onPress={()=>{}}/>
+                <PaperDrawer.Item icon="filter" label="Filter" onPress={()=>props.navigation.navigate('Filter')}/>
+                <PaperDrawer.Item icon="brain" label="Studying" onPress={()=>{}}/>
+                <PaperDrawer.Item icon="bookshelf" label="Lerned" onPress={()=>{}}/>
                 <PaperDrawer.Item icon="share" label="Share" onPress={()=>{}} />
             </PaperDrawer.Section>
             <Text style={styles.titleName}>About</Text>
@@ -83,7 +85,7 @@ const styles = StyleSheet.create({
         alignItems:'center'
     },
     section:{
-        marginLeft:10,
+        marginLeft:20,
         flexDirection:'row',
         alignItems:'center'
     },
@@ -109,5 +111,5 @@ const styles = StyleSheet.create({
         position:'absolute',
         right: 0,
         transform:[{scale: 1.2}]
-    } 
+    }
 });

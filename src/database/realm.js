@@ -23,16 +23,23 @@ const TaskShema = {
 const Config = {
     name: "Config",
     properties:{
-        _id:"int",
-        word:"string"
+        _id:{type: "int", default:0},
+        db:{type: "string", default:"German"},
+        filter:{type: "string", default: "verb"}
     },
     primaryKey: "_id"
 };
 
 
-const realm = new Realm({
-    schema:[TaskShema],
-    schemaVersion:3
+export const realm = new Realm({
+    schema:[TaskShema, Config],
+    schemaVersion:5
 })
 
-export default realm;
+export const initConfig = ()=> {realm.write(() => {
+        realm.create("Config",{})
+  })
+}
+
+export const realmOpen = (collections) => Realm.open({schema:collections});
+export const realmClose = () => realm.close();
