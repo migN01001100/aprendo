@@ -3,7 +3,7 @@ import { View, StyleSheet, AppState, TextInput, Animated} from 'react-native';
 import {FAB, Appbar, IconButton, Portal} from  'react-native-paper';
 import {DrawerActions} from '@react-navigation/native';
 import Carousel from 'react-native-snap-carousel';
-import {realm, initConfig} from './database/realm';
+import {realm, initConfig, realmForIndex, realmSelect} from './database/realm';
 
 // check first Config initialization
 const initDB = ()=>{
@@ -16,7 +16,7 @@ const initDB = ()=>{
 }
 const init = initDB() // initialize DB
 export const config = realm.objects("Config")[0] //set configuration to the app
-const state = realm.objects(config.db).length // check db for data to update once at the beginnig
+export const state = ()=>realm.objects(config.db).length // check db for data to update once at the beginnig
 config.state = false
 
 //filter words
@@ -25,12 +25,16 @@ const _selectObjects = ()=>{
   tempList =[]
   const objects = realm.objects(config.db)
   objects.map(hasit=>{
+    let bool = false
     let array = hasit.category
     array.map(each=>{
-      if(each === config.filter){
-        tempList.push(hasit)
+      if(each === "learnt" || each !== config.filter){
+        bool = true
       }
     })
+    if(!bool){
+      tempList.push(hasit)
+    }
   })
 }
 const Main = ({navigation}) => {
@@ -52,7 +56,7 @@ const Main = ({navigation}) => {
     if (AppState.currentState.match(/inactive|background/)){
       console.log("inactive")
     }else{
-      if(!config.state && state > 0){
+      if(!config.state && state() > 0){ // state first a variable, after changed to func check if working
         _selectObjects()
         setList(tempList)   // if state db has data and you beggin the app set initial list data
         config.state = true // once list is setted don't come back here
@@ -70,14 +74,30 @@ const Main = ({navigation}) => {
       setList(tempList)   // on db changes reset list
     }) 
   })
-     
-  const _calculateRef = tag =>{
+  const modifyCategoryDB = (tag,pointer)=>{
+    const _index = realmForIndex(config.db,list[pointer]._id)
+    const itemObject = realmSelect(config.db,_index)
+    const itemCategories = itemObject.category
+    let bool = false
+    itemCategories.map(item=>{
+      if(item === tag){
+         bool = true
+      }
+    })
+    if(!bool){
+      realm.write(()=>{
+        itemObject.category = [...itemCategories,tag]
+      }) 
+    }
+  }
+
+  const _calculateRef = (tag) =>{
     if(pointerA<pointerB){
-      console.log(list[pointerB])
-    }else if(pointerA === undefined){
-      console.log(list[0])
+      modifyCategoryDB(tag,pointerB)
+    }else if(pointerA === undefined){  // when is not defined yet 
+       modifyCategoryDB(tag,0)
     }else{
-      console.log(list[pointerB])
+      modifyCategoryDB(tag,pointerB)   
     }
   }
     return(
@@ -101,7 +121,7 @@ const Main = ({navigation}) => {
             <Portal>
               <FAB.Group
                 open={stateFab}
-                icon={stateFab ? 'feather' : 'desk'}
+                icon={stateFab ? 'feather' : 'notebook-outline'}
                 actions={[
                   { icon: 'plus', onPress: () => {
                     navigation.navigate('Word')
@@ -474,10 +494,10 @@ const _changeWord = id => active => word => primary => secondary => topLeft => b
   if(!active){
     return
   }else{
-    const _item = realm.objects(config.db).findIndex(index=>index._id == id) //search index of object to modify
+    const _item = realmForIndex(config.db,id) //search index of object to modify
     
     realm.write(()=>{
-      const itemIndex = realm.objects(config.db)[_item] // select object via index
+      const itemIndex = realmSelect(config.db,_item) // select object via index
       
       itemIndex.word = word
       itemIndex.primary = primary

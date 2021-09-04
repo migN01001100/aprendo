@@ -10,19 +10,26 @@ let allCategories = new Set()
 const _getCategories = () => {
     db.map(item=>{
         let array = item.category
-        array.map(item=>allCategories.add(item))
+        array.map(item=>{
+            if(item !== "studying" && item !== "learnt"){
+                allCategories.add(item)  
+            }
+        })
     })
 }
 _getCategories()
 let category = Array.from(allCategories)
 
-realm.addListener('change',()=>{
-    console.log(config.filter)
-})
 
 export const FilterScreen = ({navigation}) => {
     const [checked, setChecked] = React.useState(config.filter)
+    const [loadCategories, setLoadCategories] = React.useState(category)
 
+    realm.addListener('change',()=>{
+        _getCategories()
+         category = Array.from(allCategories)
+         setLoadCategories(category)
+    })
     async function _filterChange(value) {
         try{
             return await realm.write(()=>{
@@ -47,8 +54,9 @@ export const FilterScreen = ({navigation}) => {
                         _filterChange(value)
                     }}
                     value={checked}>
-                    {category.map(item=>(
+                    {loadCategories.map(item=>(
                         <FilterBuild
+                            key={Math.random().toString().substr(2,4)}
                             name={item}
                         />
                     ))}
@@ -62,9 +70,8 @@ export const FilterScreen = ({navigation}) => {
 const FilterBuild = props => {
     return(
         <RadioButton.Item
-            label={props.name}
+            label={props.name.replace(/^\w/, c => c.toUpperCase())}
             value={props.name}
-            onPress={()=>setChecked(props.name)}
         />
     )
 }

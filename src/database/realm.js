@@ -1,6 +1,6 @@
 import Realm from 'realm';
 
-const TaskShema = {
+export const TaskShema = {
     name: "German",
     properties:{
         _id:"int",
@@ -20,7 +20,7 @@ const TaskShema = {
     primaryKey: "_id"
 };
 
-const Config = {
+export const Config = {
     name: "Config",
     properties:{
         _id:{type: "int", default:0},
@@ -41,5 +41,9 @@ export const initConfig = ()=> {realm.write(() => {
   })
 }
 
-export const realmOpen = (collections) => Realm.open({schema:collections});
+export const realmOpen = (collections) => Realm.open({schema:collections, schemaVersion:5});
 export const realmClose = () => realm.close();
+//search index 
+export const realmForIndex = (dbName, id)=> realm.objects(dbName).findIndex(index=>index._id == id)
+//select object
+export const realmSelect = (dbName,item) => realm.objects(dbName)[item]

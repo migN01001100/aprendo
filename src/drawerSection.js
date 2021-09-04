@@ -10,9 +10,17 @@ import {
     Drawer
 } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
+import { state } from './mainScreen';
+
 
 export const ItemsDrawer = props => {
+    const [saved, setSaved] = React.useState(state())
+    const [learnt, setLearnt] = React.useState()
+
+    React.useEffect(()=>{
+        setSaved(state())
     
+    })
 
     return(
         <PaperDrawer.Section style={styles.drawer}>
@@ -28,7 +36,7 @@ export const ItemsDrawer = props => {
                     <Caption style={styles.caption}>Learned</Caption>
                 </Drawer.Section>
                 <Drawer.Section style={styles.section}>
-                    <Paragraph style={styles.paragraph}>1000</Paragraph>
+                    <Paragraph style={styles.paragraph}>{saved}</Paragraph>
                     <Caption style={styles.caption}>Saved</Caption>
                 </Drawer.Section>
             </Drawer.Section>
