@@ -21,22 +21,26 @@ config.state = false
 
 //filter words
 let tempList = []
-const _selectObjects = ()=>{
+const _selectObjects = filter=>{
   tempList =[]
   const objects = realmAllObjects(config.db)
   objects.map(hasit=>{
     let bool = false
     let array = hasit.category
     array.map(each=>{
-      if(each === "learnt" || each !== config.filter){
-        bool = true
+      if(each === filter){
+          bool = true
+      }else if(each === 'learnt'){
+          bool = false
       }
     })
-    if(!bool){
+    if(bool){
       tempList.push(hasit)
+      console.log(hasit)
     }
   })
 }
+
 const Main = ({navigation}) => {
   const [list, setList] = React.useState()  //always use it to control data-carousel 
   const [stateFab, setStateFab] = React.useState(false)
@@ -57,7 +61,7 @@ const Main = ({navigation}) => {
       console.log("inactive")
     }else{
       if(!config.state && state() > 0){ // state first a variable, after changed to func check if working
-        _selectObjects()
+        _selectObjects(config.filter)
         setList(tempList)   // if state db has data and you beggin the app set initial list data
         config.state = true // once list is setted don't come back here
         console.log("once entered!")
@@ -70,7 +74,7 @@ const Main = ({navigation}) => {
     AppState.addEventListener("change", _handleState)
 
     realm.addListener("change",()=>{
-      _selectObjects()
+      _selectObjects(config.filter)
       setList(tempList)   // on db changes reset list
     }) 
   })
@@ -116,7 +120,6 @@ const Main = ({navigation}) => {
             itemWidth={600}
             onBeforeSnapToItem={()=>setPointerA(ref.currentIndex)}
             onSnapToItem={()=>setPointerB(ref.currentIndex)}
-            lockScrollWhileSnapping={false}
             />
             <Portal>
               <FAB.Group

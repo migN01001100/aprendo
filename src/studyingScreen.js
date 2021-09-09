@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, ScrollView} from 'react-native';
-import {Appbar, List} from 'react-native-paper';
+import {Appbar, Card} from 'react-native-paper';
 import { realm, realmAllObjects, realmForIndex, realmSelect } from './database/realm';
 import { config } from './mainScreen';
 
@@ -36,11 +36,13 @@ const WordsList = props=>{
 
 
     return(
-        <List.Item 
-            title={props.word}
-            description={props.translation}
-            right={()=><Appbar.Action icon="close" onPress={()=>{_deleteFilter(props.id, config.db, objName)}} />}
-        />
+        <Card style={styles.listContainer}>
+            <Card.Title
+             title={props.word}
+             subtitle={props.translation}
+             right={()=><Appbar.Action color="#00dac4" icon="delete-outline" onPress={()=>{_deleteFilter(props.id,config.db,objName)}} />}
+            />
+        </Card>
     )
 }
 
@@ -79,6 +81,11 @@ export const _filterObjects = filter => {
 const styles = StyleSheet.create({
  mainContainer:{
      flex: 1
+ },
+ listContainer:{
+     margin: 5,
+     borderBottomEndRadius: 50,
+     borderRadius:5
  }
 });
 

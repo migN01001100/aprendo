@@ -12,7 +12,7 @@ const _getCategories = () => {
         let array = item.category
         array.map(item=>{
             if(item !== "studying" && item !== "learnt"){
-                allCategories.add(item)  
+                allCategories.add(item)
             }
         })
     })
@@ -30,16 +30,15 @@ export const FilterScreen = ({navigation}) => {
          category = Array.from(allCategories)
          setLoadCategories(category)
     })
-    async function _filterChange(value) {
-        try{
-            return await realm.write(()=>{
-                const settings = realm.objects("Config")[0]
-                settings.filter = value
-            })
-        }catch(e){
-            console.log(e)
-        }
-    } 
+    const _filterChange = value => {
+        realm.write(()=>{
+            const settings = realm.objects("Config")[0]
+            settings.filter = value
+        })
+    }
+        
+    
+
 
     return(
         <View style={styles.mainContainer}>
