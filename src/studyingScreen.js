@@ -56,7 +56,7 @@ export const _deleteFilter = (id, db, filter)=> {
 }
 
 
-export const _filterObjects = (filter) => {
+export const _filterObjects = filter => {
     const selectedObjects = []
     db.map(item=>{
         let bool = false

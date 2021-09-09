@@ -11,11 +11,18 @@ import {
 } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
 import { state } from './mainScreen';
+import { _filterObjects } from './studyingScreen';
+import { realm } from './database/realm';
 
-
+const filterName = "learnt"
 export const ItemsDrawer = props => {
     const [saved, setSaved] = React.useState(state())
-    const [learnt, setLearnt] = React.useState()
+    const [learnt, setLearnt] = React.useState(_filterObjects(filterName).length)
+
+    realm.addListener('change',()=>{
+        setLearnt(_filterObjects(filterName).length)
+    })
+    
 
     React.useEffect(()=>{
         setSaved(state())
@@ -32,8 +39,8 @@ export const ItemsDrawer = props => {
             <PaperDrawer.Section>
             <Drawer.Section style={styles.row}>
                 <Drawer.Section style={styles.section}>
-                    <Paragraph style={styles.paragraph}>234</Paragraph>
-                    <Caption style={styles.caption}>Learned</Caption>
+                    <Paragraph style={styles.paragraph}>{learnt}</Paragraph>
+                    <Caption style={styles.caption}>Learnt</Caption>
                 </Drawer.Section>
                 <Drawer.Section style={styles.section}>
                     <Paragraph style={styles.paragraph}>{saved}</Paragraph>
