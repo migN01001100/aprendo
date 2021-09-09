@@ -182,8 +182,6 @@ export const WordScreen = ({navigation}) => {
                 case 'checkList':
                     setQuery(()=>_match(word,query))
                     copyCat = _getAutoComplete().filter(x => x !== query.toString())
-                    console.log(copyCat)
-                    console.log(_getAutoComplete().filter(x => x !== query.toString()))
                     if(setLast >= 2){
                         flag = true
                     }

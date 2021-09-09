@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, StyleSheet} from 'react-native';
 import { RadioButton, Appbar } from 'react-native-paper';
-import { realm } from './database/realm';
+import { realm, realmAllObjects } from './database/realm';
 import { config } from './mainScreen';
 
-const db = realm.objects(config.db)
+const db = realmAllObjects(config.db)
 
 let allCategories = new Set()
 const _getCategories = () => {

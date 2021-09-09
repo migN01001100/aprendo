@@ -11,6 +11,8 @@ import {
 import React from 'react';
 import {WordScreen} from './src/wordScreen';
 import {FilterScreen} from './src/filterScreen';
+import { StudyingScreen } from './src/studyingScreen';
+import { LearntScreen } from './src/learntScreen';
 import Main from './src/mainScreen';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import { ItemsDrawer } from './src/drawerSection';
@@ -45,6 +47,8 @@ const App = () => {
               <Drawer.Screen name="Home" component={Main} />
               <Drawer.Screen name="Word" component={WordScreen} />
               <Drawer.Screen name="Filter" component={FilterScreen} />
+              <Drawer.Screen name="Studying" component={StudyingScreen} />
+              <Drawer.Screen name="Learnt" component={LearntScreen} />
             </Drawer.Navigator>
         </NavigationContainer>
       </PaperProvider>
