@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView, Animated } from 'react-native';
-import { FAB, TextInput, Appbar, Chip, Snackbar, IconButton, Caption } from 'react-native-paper';
-import {realm} from './database/realm';
+import { FAB, TextInput, Appbar, Chip, Snackbar, IconButton, Caption, HelperText } from 'react-native-paper';
+import {realm, realmAllObjects} from './database/realm';
+import { config } from './mainScreen';
 
 const colors ={
     blue:'#0066ff',
@@ -10,6 +11,8 @@ const colors ={
     gray:'#e6e6e6'
 }
 let color = '' //save color for DB
+let flag = false
+let copyCat = []
 export const WordScreen = ({navigation}) => {
     const [main, setMain] = React.useState('')
     const [category, setCategory] = React.useState('')
@@ -25,6 +28,8 @@ export const WordScreen = ({navigation}) => {
     const [bottomRight, setBottomRight] = React.useState('')
     const [chip, setChip] = React.useState([])
     const [warn, setWarn] = React.useState(false)
+    
+    
 
     const animBlue = React.useRef(new Animated.Value(0)).current;
     const animRed = React.useRef(new Animated.Value(0)).current;
@@ -118,6 +123,75 @@ export const WordScreen = ({navigation}) => {
             useNativeDriver:false
         }).start();
     }
+
+    const handleErrorMain = (text) =>{
+        const dbObject = realmAllObjects(config.db)
+        let word = []
+        dbObject.map(item=>word.push(item.word))
+        return word.includes(text)
+    }
+
+    const setObjects = new Set()
+    const _getAutoComplete = () =>{
+        const dbObjects = realmAllObjects(config.db)
+        dbObjects.map(item=>{
+            let eachObject = item.category
+            eachObject.map(each=>{
+                if(each !== "studying" && each !== "learnt"){
+                    setObjects.add(each)  
+                }
+            })
+        })
+        return Array.from(setObjects)
+    }
+    const [query, setQuery] = React.useState(_getAutoComplete())
+    
+    const _match = (word, list)=> {
+        let regex = new RegExp("\\b"+word+"\\w*","gi")
+        return list.toString().match(regex)
+    }
+    const setLast = query.length
+    const _removeOrAddFilter = (word, name) =>{
+            switch (name){
+                case 'query':
+                    if(!flag){
+                        setChip([...chip, word])
+                        setQuery(query.filter(x => x !== word))
+                        setCategory('')
+                    }else{
+                        setChip([...chip, word])
+                        setQuery(copyCat)
+                        setCategory('')
+                        copyCat = []
+                        flag = false
+                    }
+                    break;
+                case 'chip':
+                    setQuery([...query, word])
+                    setChip(chip.filter(x => x !== word))
+                    break;
+                case 'empty':
+                    if(chip.length === 0){
+                        setQuery(_getAutoComplete())
+                    }else{
+                        let copyCat = chip.toString() 
+                        setQuery(_getAutoComplete().filter(x => !copyCat.includes(x)))
+                    }
+                    flag = false
+                    break;
+                case 'checkList':
+                    setQuery(()=>_match(word,query))
+                    copyCat = _getAutoComplete().filter(x => x !== query.toString())
+                    console.log(copyCat)
+                    console.log(_getAutoComplete().filter(x => x !== query.toString()))
+                    if(setLast >= 2){
+                        flag = true
+                    }
+                    break;
+                default:
+                    return
+            }   
+    }
     return (
         
             <View style={styles.father}>
@@ -128,33 +202,52 @@ export const WordScreen = ({navigation}) => {
                 <Notification
                     state={warn}
                     dismiss={()=>setWarn(false)}
+                    message={handleErrorMain(main)?"You cannot add a word that already exist.":"There is no word to add."}
                 />
                 <View style={styles.form}>
                     <ScrollView style={styles.main}>
                         <TextInput label="Main" mode="outlined" value={main}
                             onChangeText={word => {setMain(word)}}
                         />
+                        {handleErrorMain(main)?<HelperText type='error' visible={true}>Error: This word already exist.</HelperText>:<View/>}
                         <ScrollView horizontal={true} >
-                            {chip.map(item=>
-                            <Chip 
-                                key={item + "_" + Math.random().toString().substr(2,2)}
-                                onClose={()=>{
-                                    const set = new Set(chip)
-                                    set.delete(item)
-                                    setChip(Array.from(set))
-                                }}
-                            >{item}</Chip>
-                            )}
+                            {query.map(item=>
+                                <Chip
+                                    key={item + "_" + Math.random().toString().substr(2,9)}
+                                    onPress={()=>{
+                                        _removeOrAddFilter(item, 'query')
+                                    }}
+                                >{item}</Chip>
+                                )}
                         </ScrollView>
                         <TextInput label="category" mode="outlined" value={category}
-                            onChangeText={word => {setCategory(word)}}
-                            onEndEditing={()=>{
+                            onChangeText={word => {
+                                setCategory(word)
+                                    if(null !== _match(word,query) && word !== ''){
+                                        _removeOrAddFilter(word, 'checkList')
+                                    }else if (word == ''){
+                                        _removeOrAddFilter(word,'empty')                                    
+                                    }
+                            }}
+                            onSubmitEditing={()=>{
                                 if(category !== ""){
                                     setChip([...chip,category])
                                     setCategory('')
                                 }
-                            }}
+                            }
+                            }
                         />
+                        <ScrollView horizontal={true} >
+                            {chip.map(item=>
+                            <Chip
+                                selected={true}
+                                key={item + "_" + Math.random().toString().substr(2,2)}
+                                onClose={()=>{
+                                    _removeOrAddFilter(item, 'chip')
+                                }}
+                            >{item}</Chip>
+                            )}
+                        </ScrollView>
                         <Caption>Pick a gender</Caption>
                             <ScrollView horizontal={true}>
                                 <Animated.View style={[styles.animatedBlue, {opacity:animBlue}]} ></Animated.View>
@@ -198,11 +291,12 @@ export const WordScreen = ({navigation}) => {
                 <View style={styles.bottomFab}>
                     <FAB icon="check" onPress={
                         ()=> {
-                            if (main == ""){
+                            if (main == "" || handleErrorMain(main)){
                                 setWarn(true)
                             }else{
                             addNewWord(main)(chip)(color)(translation)(primary)(secondary)(middle)(mSecondary)(topLeft)(topRight)(bottomLeft)(bottomRight)
                             navigation.navigate('Home')
+                            setQuery(_getAutoComplete())
                             setMain("")
                             setChip([])
                             color = ''
@@ -249,7 +343,7 @@ const Notification = props =>{
             visible={props.state}
             onDismiss={props.dismiss}
         >
-            There is no word to add.
+            {props.message}
         </Snackbar>
     )
 }

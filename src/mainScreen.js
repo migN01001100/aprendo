@@ -3,7 +3,7 @@ import { View, StyleSheet, AppState, TextInput, Animated} from 'react-native';
 import {FAB, Appbar, IconButton, Portal} from  'react-native-paper';
 import {DrawerActions} from '@react-navigation/native';
 import Carousel from 'react-native-snap-carousel';
-import {realm, initConfig, realmForIndex, realmSelect} from './database/realm';
+import {realm, initConfig, realmForIndex, realmSelect, realmAllObjects} from './database/realm';
 
 // check first Config initialization
 const initDB = ()=>{
@@ -23,7 +23,7 @@ config.state = false
 let tempList = []
 const _selectObjects = ()=>{
   tempList =[]
-  const objects = realm.objects(config.db)
+  const objects = realmAllObjects(config.db)
   objects.map(hasit=>{
     let bool = false
     let array = hasit.category

@@ -43,6 +43,8 @@ export const initConfig = ()=> {realm.write(() => {
 
 export const realmOpen = (collections) => Realm.open({schema:collections, schemaVersion:5});
 export const realmClose = () => realm.close();
+//return objects 
+export const realmAllObjects = db => realm.objects(db) 
 //search index 
 export const realmForIndex = (dbName, id)=> realm.objects(dbName).findIndex(index=>index._id == id)
 //select object
