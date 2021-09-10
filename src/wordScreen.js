@@ -208,7 +208,7 @@ export const WordScreen = ({navigation}) => {
                             onChangeText={word => {setMain(word)}}
                         />
                         {handleErrorMain(main)?<HelperText type='error' visible={true}>Error: This word already exist.</HelperText>:<View/>}
-                        <ScrollView horizontal={true} >
+                        <ScrollView horizontal={true} style={styles.chipTop} >
                             {query.map(item=>
                                 <Chip
                                     key={item + "_" + Math.random().toString().substr(2,9)}
@@ -235,7 +235,7 @@ export const WordScreen = ({navigation}) => {
                             }
                             }
                         />
-                        <ScrollView horizontal={true} >
+                        <ScrollView horizontal={true} style={styles.chipBottom} >
                             {chip.map(item=>
                             <Chip
                                 selected={true}
@@ -409,5 +409,12 @@ const styles = StyleSheet.create({
         borderWidth:5,
         width:30,
         height:30
+    },
+    chipTop:{
+        marginTop:5
+    },
+    chipBottom:{
+        marginTop:5
     }
+
   });

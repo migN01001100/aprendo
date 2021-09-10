@@ -6,8 +6,9 @@ import { config } from './mainScreen';
 
 const db = realmAllObjects(config.db)
 
-let allCategories = new Set()
+
 const _getCategories = () => {
+    let allCategories = new Set()
     db.map(item=>{
         let array = item.category
         array.map(item=>{
@@ -16,19 +17,16 @@ const _getCategories = () => {
             }
         })
     })
+    return Array.from(allCategories)
 }
-_getCategories()
-let category = Array.from(allCategories)
 
 
 export const FilterScreen = ({navigation}) => {
     const [checked, setChecked] = React.useState(config.filter)
-    const [loadCategories, setLoadCategories] = React.useState(category)
+    const [loadCategories, setLoadCategories] = React.useState(_getCategories())
 
     realm.addListener('change',()=>{
-        _getCategories()
-         category = Array.from(allCategories)
-         setLoadCategories(category)
+            setLoadCategories(_getCategories())
     })
     const _filterChange = value => {
         realm.write(()=>{

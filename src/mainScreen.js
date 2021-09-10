@@ -9,9 +9,9 @@ import {realm, initConfig, realmForIndex, realmSelect, realmAllObjects} from './
 const initDB = ()=>{
   if (realm.objects("Config").length === 0){
     initConfig()
-    console.log("Initialized DB")
+    //console.log("Initialized DB")
   }else{
-    console.log("Not initialized DB")
+    //console.log("Not initialized DB")
   }
 }
 const init = initDB() // initialize DB
@@ -36,7 +36,6 @@ const _selectObjects = filter=>{
     })
     if(bool){
       tempList.push(hasit)
-      console.log(hasit)
     }
   })
 }
@@ -58,7 +57,7 @@ const Main = ({navigation}) => {
 
   const _handleState = ()=>{
     if (AppState.currentState.match(/inactive|background/)){
-      console.log("inactive")
+      //console.log("inactive")
     }else{
       if(!config.state && state() > 0){ // state first a variable, after changed to func check if working
         _selectObjects(config.filter)
@@ -66,7 +65,7 @@ const Main = ({navigation}) => {
         config.state = true // once list is setted don't come back here
         console.log("once entered!")
       }
-      console.log("active")
+      //console.log("active")
     }
   }
 
