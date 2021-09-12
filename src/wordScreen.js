@@ -203,12 +203,12 @@ export const WordScreen = ({navigation}) => {
                     message={handleErrorMain(main)?"You cannot add a word that already exist.":"There is no word to add."}
                 />
                 <View style={styles.form}>
-                    <ScrollView style={styles.main}>
-                        <TextInput label="Main" mode="outlined" value={main}
+                    <ScrollView style={styles.main} showsVerticalScrollIndicator={false}>
+                        <TextInput label="Word" mode="outlined" value={main}
                             onChangeText={word => {setMain(word)}}
                         />
                         {handleErrorMain(main)?<HelperText type='error' visible={true}>Error: This word already exist.</HelperText>:<View/>}
-                        <ScrollView horizontal={true} style={styles.chipTop} >
+                        <ScrollView horizontal={true} style={styles.chipTop} showsHorizontalScrollIndicator={false} >
                             {query.map(item=>
                                 <Chip
                                     key={item + "_" + Math.random().toString().substr(2,9)}
@@ -218,7 +218,7 @@ export const WordScreen = ({navigation}) => {
                                 >{item}</Chip>
                                 )}
                         </ScrollView>
-                        <TextInput label="category" mode="outlined" value={category}
+                        <TextInput label="Category" mode="outlined" value={category}
                             onChangeText={word => {
                                 setCategory(word)
                                     if(null !== _match(word,query) && word !== ''){
@@ -235,7 +235,7 @@ export const WordScreen = ({navigation}) => {
                             }
                             }
                         />
-                        <ScrollView horizontal={true} style={styles.chipBottom} >
+                        <ScrollView horizontal={true} style={styles.chipBottom} showsHorizontalScrollIndicator={false} >
                             {chip.map(item=>
                             <Chip
                                 selected={true}
@@ -260,28 +260,28 @@ export const WordScreen = ({navigation}) => {
                         <TextInput label="Translation" mode="outlined" value={translation}
                             onChangeText={word => {setTranslation(word)}}
                         />
-                        <TextInput label="Primary" mode="outlined" value={primary}
+                        <TextInput label="Word top" mode="outlined" value={primary}
                             onChangeText={word => {setPrimary(word)}}
                         />
-                        <TextInput label="Secondary" mode="outlined" value={secondary}
+                        <TextInput label="Word bottom" mode="outlined" value={secondary}
                             onChangeText={word => {setSecondary(word)}}
                         />
                         <TextInput label="Middle" mode="outlined" value={middle}
                             onChangeText={word => {setMiddle(word)}}
                         />
-                        <TextInput label="Secondary" mode="outlined" value={mSecondary}
+                        <TextInput label="Middle Top" mode="outlined" value={mSecondary}
                             onChangeText={word => {setMsecondary(word)}}
                         />
-                        <TextInput label="Top Left" mode="outlined" value={topLeft}
+                        <TextInput label="Left top corner" mode="outlined" value={topLeft}
                             onChangeText={word => {setTopLeft(word)}}
                         />
-                        <TextInput label="Top Right" mode="outlined" value={topRight}
+                        <TextInput label="Right top corner" mode="outlined" value={topRight}
                             onChangeText={word => {setTopRight(word)}}
                         />
-                        <TextInput label="Bottom Left" mode="outlined" value={bottomLeft}
+                        <TextInput label="Bottom left corner" mode="outlined" value={bottomLeft}
                             onChangeText={word => {setBottomLeft(word)}}
                         />
-                        <TextInput label="Bottom Right" mode="outlined" value={bottomRight}
+                        <TextInput label="Bottom right corner" mode="outlined" value={bottomRight}
                             onChangeText={word => {setBottomRight(word)}}
                         />
                     </ScrollView>
@@ -373,7 +373,7 @@ const styles = StyleSheet.create({
         borderColor:'#0047b3',
         borderRadius:50,
         borderStyle:'solid',
-        borderWidth:5,
+        borderWidth:10,
         width:30,
         height:30
     },
@@ -384,7 +384,7 @@ const styles = StyleSheet.create({
         borderColor:'#b30000',
         borderRadius:50,
         borderStyle:'solid',
-        borderWidth:5,
+        borderWidth:10,
         width:30,
         height:30
     },
@@ -395,7 +395,7 @@ const styles = StyleSheet.create({
         borderColor:'#00802b',
         borderRadius:50,
         borderStyle:'solid',
-        borderWidth:5,
+        borderWidth:10,
         width:30,
         height:30
     },
@@ -406,7 +406,7 @@ const styles = StyleSheet.create({
         borderColor:'#808080',
         borderRadius:50,
         borderStyle:'solid',
-        borderWidth:5,
+        borderWidth:10,
         width:30,
         height:30
     },

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, AppState, TextInput, Animated} from 'react-native';
-import {FAB, Appbar, IconButton, Portal} from  'react-native-paper';
+import {FAB, Appbar, IconButton} from  'react-native-paper';
 import {DrawerActions} from '@react-navigation/native';
 import Carousel from 'react-native-snap-carousel';
 import {realm, initConfig, realmForIndex, realmSelect, realmAllObjects} from './database/realm';
@@ -109,18 +109,18 @@ const Main = ({navigation}) => {
               <Appbar.Action icon="menu" onPress={()=>navigation.dispatch(DrawerActions.openDrawer())} />
               <Appbar.Content title={config.db} subtitle={config.filter}/>
           </Appbar.Header>
-          <Carousel
-            ref={ref=>setRef(ref)}
-            layout={'tinder'} 
-            layoutCardOffset={15}
-            data={list?list:[]}
-            renderItem={DataCards}
-            sliderWidth={400}
-            itemWidth={600}
-            onBeforeSnapToItem={()=>setPointerA(ref.currentIndex)}
-            onSnapToItem={()=>setPointerB(ref.currentIndex)}
-            />
-            <Portal>
+            <Carousel
+              ref={ref=>setRef(ref)}
+              layout={'tinder'} 
+              layoutCardOffset={15}
+              data={list?list:[]}
+              renderItem={DataCards}
+              sliderWidth={400}
+              itemWidth={600}
+              onBeforeSnapToItem={()=>setPointerA(ref.currentIndex)}
+              onSnapToItem={()=>setPointerB(ref.currentIndex)}
+              activeAnimationType='decay'
+              />
               <FAB.Group
                 open={stateFab}
                 icon={stateFab ? 'feather' : 'notebook-outline'}
@@ -145,7 +145,12 @@ const Main = ({navigation}) => {
                   }
                 }}
               />
-            </Portal>
+          <FAB
+            style={styles.restartFAB}
+            small
+            icon='restart'
+            onPress={()=>ref.snapToItem(0)}
+          />
         </View>
        
     )   
@@ -540,8 +545,8 @@ const styles = StyleSheet.create({
         height:250,
         borderRadius:10,
         borderTopEndRadius:100,
-        marginLeft:22,
-        backgroundColor:'#fffff5'
+        backgroundColor:'#fffff5',
+        marginLeft:'4%'
       },
       word:{
         position:'absolute',
@@ -643,7 +648,13 @@ const styles = StyleSheet.create({
       chooseGrayColor:{
         position:'absolute',
         zIndex:1
-      }     
+      },
+      restartFAB:{
+        position:'absolute',
+        margin:16,
+        left:20,
+        top: 90
+      }
   });
 
 export default Main;
