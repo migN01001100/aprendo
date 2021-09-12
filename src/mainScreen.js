@@ -65,7 +65,7 @@ const Main = ({navigation}) => {
         config.state = true // once list is setted don't come back here
         console.log("once entered!")
       }
-      //console.log("active")
+      //console.log('active')
     }
   }
 

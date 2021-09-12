@@ -248,11 +248,11 @@ export const WordScreen = ({navigation}) => {
                         </ScrollView>
                         <Caption>Pick a gender</Caption>
                             <ScrollView horizontal={true}>
-                                <Animated.View style={[styles.animatedBlue, {opacity:animBlue}]} ></Animated.View>
+                                    <Animated.View style={[styles.animatedBlue, {opacity:animBlue}]} ></Animated.View>
                                 <IconButton icon="circle" color={colors.blue} onPress={()=>{color=colors.blue;selectBlue()}} />
-                                <Animated.View style={[styles.animatedRed, {opacity:animRed}]} ></Animated.View>
+                                    <Animated.View style={[styles.animatedRed, {opacity:animRed}]} ></Animated.View>
                                 <IconButton icon="circle" color={colors.red} onPress={()=>{color=colors.red;selectRed()}} />
-                                <Animated.View style={[styles.animatedGreen, {opacity:animGreen}]} ></Animated.View>
+                                    <Animated.View style={[styles.animatedGreen, {opacity:animGreen}]} ></Animated.View>
                                 <IconButton icon="circle" color={colors.green} onPress={()=>{color=colors.green;selectGreen()}} />
                                     <Animated.View style={[styles.animatedGray, {opacity:animGray}]} ></Animated.View>
                                 <IconButton icon="circle" color={colors.gray} onPress={()=>{color=colors.gray;selectGray()}} />
@@ -292,7 +292,7 @@ export const WordScreen = ({navigation}) => {
                             if (main == "" || handleErrorMain(main)){
                                 setWarn(true)
                             }else{
-                            addNewWord(main)(chip)(color)(translation)(primary)(secondary)(middle)(mSecondary)(topLeft)(topRight)(bottomLeft)(bottomRight)
+                            addNewWord(main)(chip.length == 0?["all"]:chip)(color)(translation)(primary)(secondary)(middle)(mSecondary)(topLeft)(topRight)(bottomLeft)(bottomRight)
                             navigation.navigate('Home')
                             setQuery(_getAutoComplete())
                             setMain("")
@@ -307,6 +307,10 @@ export const WordScreen = ({navigation}) => {
                             setTopRight("")
                             setBottomLeft("")
                             setBottomRight("")
+                            Animated.timing(animBlue,{}).reset()
+                            Animated.timing(animGreen,{}).reset()
+                            Animated.timing(animRed,{}).reset()
+                            Animated.timing(animGray,{}).reset()
                             }
                         }}/>
                 </View>
