@@ -49,11 +49,12 @@ export const ItemsDrawer = props => {
             </Drawer.Section>
             </PaperDrawer.Section>
             <PaperDrawer.Section style={styles.drawerSection}>
-                <PaperDrawer.Item icon="earth" label="Language" onPress={()=>{}}/>
+                <PaperDrawer.Item icon="earth" label="Language" onPress={()=>{props.navigation.navigate('Language')}}/>
                 <PaperDrawer.Item icon="filter" label="Filter" onPress={()=>props.navigation.navigate('Filter')}/>
                 <PaperDrawer.Item icon="brain" label="Studying" onPress={()=>props.navigation.navigate('Studying')}/>
                 <PaperDrawer.Item icon="bookshelf" label="Learnt" onPress={()=>props.navigation.navigate('Learnt')}/>
-                <PaperDrawer.Item icon="share" label="Share" onPress={()=>{}} />
+                <PaperDrawer.Item icon="database-export" label="Export" onPress={()=>{}} />
+                <PaperDrawer.Item icon="database-import" label="Import" onPress={()=>{}} />
             </PaperDrawer.Section>
             <Text style={styles.titleName}>About</Text>
                 <PaperDrawer.Section style={styles.section}>

@@ -1,24 +1,5 @@
 import Realm from 'realm';
-
-export const TaskShema = {
-    name: "German",
-    properties:{
-        _id:"int",
-        word:"string",
-        category:"string[]",
-        color:"string",
-        translation:"string",
-        primary:"string",
-        secondary:"string",
-        middle:"string",
-        mSecondary:"string",
-        topLeft:"string",
-        topRight:"string",
-        bottomLeft:"string",
-        bottomRight:"string"
-    },
-    primaryKey: "_id"
-};
+import * as frame from './shemas'
 
 export const Config = {
     name: "Config",
@@ -32,8 +13,8 @@ export const Config = {
 
 
 export const realm = new Realm({
-    schema:[TaskShema, Config],
-    schemaVersion:5
+    schema:[frame.German, frame.Spanish , frame.Russian, frame.Ukrainian, frame.English, frame.French, Config],
+    schemaVersion:11
 })
 
 export const initConfig = ()=> {realm.write(() => {

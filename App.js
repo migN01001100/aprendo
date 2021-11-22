@@ -16,6 +16,7 @@ import { LearntScreen } from './src/learntScreen';
 import Main from './src/mainScreen';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import { ItemsDrawer } from './src/drawerSection';
+import { SelectLanguageScreen } from './src/languageScreen'
 import merge from 'deepmerge';
 
 const Drawer = createDrawerNavigator();
@@ -47,6 +48,7 @@ const App = () => {
               <Drawer.Screen name="Home" component={Main} />
               <Drawer.Screen name="Word" component={WordScreen} />
               <Drawer.Screen name="Filter" component={FilterScreen} />
+              <Drawer.Screen name="Language" component={SelectLanguageScreen} />
               <Drawer.Screen name="Studying" component={StudyingScreen} />
               <Drawer.Screen name="Learnt" component={LearntScreen} />
             </Drawer.Navigator>

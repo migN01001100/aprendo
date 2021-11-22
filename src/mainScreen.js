@@ -488,7 +488,7 @@ const returnColorGray = () =>{
             setOpenColor(false)
             _changeWord(props._id)(active)(word)(primary)(secondary)(topLeft)(bottomLeft)(topRight)(mSecondary)(middle)(bottomRight)(color)
           }} />
-          {active?<Appbar.Action style={styles.delete} color='#00dac4' icon="close" 
+          {active?<Appbar.Action style={styles.delete} color='#00dac4' icon="delete" 
           onPress={()=>{
             _deleteWord(props._id)
             }} />:<View/>}

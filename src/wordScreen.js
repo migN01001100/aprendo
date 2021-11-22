@@ -321,7 +321,7 @@ export const WordScreen = ({navigation}) => {
 const addNewWord = word => category => color => translation => primary => secondary => middle => mSecondary => topLeft => topRight => bottomLeft => bottomRight => {
     let random = Math.random().toString(9).substr(2,5);
     realm.write(()=>{
-        realm.create("German",{
+        realm.create(config.db,{
             _id: parseInt(random),
             word,
             category,
