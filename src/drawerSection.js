@@ -53,21 +53,14 @@ export const ItemsDrawer = props => {
                 <PaperDrawer.Item icon="filter" label="Filter" onPress={()=>props.navigation.navigate('Filter')}/>
                 <PaperDrawer.Item icon="brain" label="Studying" onPress={()=>props.navigation.navigate('Studying')}/>
                 <PaperDrawer.Item icon="bookshelf" label="Learnt" onPress={()=>props.navigation.navigate('Learnt')}/>
-                <PaperDrawer.Item icon="database-export" label="Export" onPress={()=>{}} />
-                <PaperDrawer.Item icon="database-import" label="Import" onPress={()=>{}} />
+                <PaperDrawer.Item icon="database-export" label="Export CSV" onPress={()=>{}} />
+                <PaperDrawer.Item icon="database-import" label="Import CSV" onPress={()=>{}} />
             </PaperDrawer.Section>
             <Text style={styles.titleName}>About</Text>
                 <PaperDrawer.Section style={styles.section}>
                     <Caption style={styles.caption}>Version:</Caption>
                     <Caption style={styles.caption}>0.0.1</Caption>
                 </PaperDrawer.Section>
-                <PaperDrawer.Section style={styles.section}>
-                    <Caption style={styles.caption}>Contact:</Caption>
-                    <Caption style={styles.caption}>gojira_team@gmail.com</Caption>
-                </PaperDrawer.Section>
-            <PaperDrawer.Section style={styles.bottomSection}>
-                <PaperDrawer.Item icon="logout-variant" label="Logout" onPress={()=>{}} />
-            </PaperDrawer.Section>
         </PaperDrawer.Section>        
     )};
 const styles = StyleSheet.create({
