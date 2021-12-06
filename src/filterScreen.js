@@ -1,42 +1,22 @@
 import React from 'react';
 import { View, StyleSheet} from 'react-native';
 import { RadioButton, Appbar } from 'react-native-paper';
-import { realm, realmAllObjects } from './database/realm';
-import { config } from './mainScreen';
-
-const db = realmAllObjects(config.db)
-
-
-const _getCategories = () => {
-    let allCategories = new Set()
-    db.map(item=>{
-        let array = item.category
-        array.map(item=>{
-            if(item !== "studying" && item !== "learnt"){
-                allCategories.add(item)
-            }
-        })
-    })
-    return Array.from(allCategories)
-}
+import { useSchemas } from './providers/schemasProvider';
 
 
 export const FilterScreen = ({navigation}) => {
-    const [checked, setChecked] = React.useState(config.filter)
-    const [loadCategories, setLoadCategories] = React.useState(_getCategories())
+    const { schemaConfig, filterChange, categories} = useSchemas()
+    const [checked, setChecked] = React.useState(schemaConfig.filter)
+    const [loadCategories, setLoadCategories] = React.useState(categories)
 
-    realm.addListener('change',()=>{
-            setLoadCategories(_getCategories())
-    })
-    const _filterChange = value => {
-        realm.write(()=>{
-            const settings = realm.objects("Config")[0]
-            settings.filter = value
-        })
-    }
-        
-    
-
+    console.log(categories)
+    React.useEffect(()=>{
+            console.log("mounted filters")
+        return ()=>{
+            setLoadCategories(categories)
+            console.log("unmounted filters")
+        }
+    },[loadCategories])
 
     return(
         <View style={styles.mainContainer}>
@@ -48,7 +28,7 @@ export const FilterScreen = ({navigation}) => {
                 <RadioButton.Group 
                     onValueChange={value=>{
                         setChecked(value)
-                        _filterChange(value)
+                        filterChange(value)
                     }}
                     value={checked}>
                     {loadCategories.map(item=>(

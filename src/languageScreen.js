@@ -1,14 +1,11 @@
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { RadioButton, Appbar } from 'react-native-paper'
-import { realm } from './database/realm'
-import { config } from './mainScreen'
+import { useSchemas } from './providers/schemasProvider'
 
 export const SelectLanguageScreen = ({navigation}) =>{
-    const schemas = realm.schema
-    const langSchemas = schemas.map(item=>item.name)
-    const filetedLangSchemas = langSchemas.filter(item=>item != "Config")
-    const [checked, setChecked] = React.useState(config.db)
+    const {DBNames, schemaConfig, languageChange} = useSchemas()
+    const [checked, setChecked] = React.useState(schemaConfig.db)
 
     return(
         <View style={styles.mainContainer}>
@@ -20,11 +17,11 @@ export const SelectLanguageScreen = ({navigation}) =>{
                 <RadioButton.Group
                     onValueChange={value=>{
                         setChecked(value)
-                        _languageChange(value)
+                        languageChange(value)
                     }}
                     value={checked}
                 >
-                    {filetedLangSchemas.map(item=>(
+                    {DBNames.map(item=>(
                         <LanguageButtom
                         label={item}
                         key={item}
@@ -34,13 +31,6 @@ export const SelectLanguageScreen = ({navigation}) =>{
             </View>
         </View>
     )
-}
-
-const _languageChange = language => {
-    realm.write(()=>{
-        const settings = realm.objects("Config")[0]
-        settings.db = language
-    })
 }
 
 const LanguageButtom = props => (

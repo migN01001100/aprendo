@@ -10,24 +10,12 @@ import {
     Drawer
 } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
-import { state } from './mainScreen';
-import { _filterObjects } from './studyingScreen';
-import { realm } from './database/realm';
+import { useSchemas } from './providers/schemasProvider';
 
-const filterName = "learnt"
+
 export const ItemsDrawer = props => {
-    const [saved, setSaved] = React.useState(state())
-    const [learnt, setLearnt] = React.useState(_filterObjects(filterName).length)
-
-    realm.addListener('change',()=>{
-        setLearnt(_filterObjects(filterName).length)
-    })
+    const {wordsSaved, wordsLearnt} = useSchemas()
     
-
-    React.useEffect(()=>{
-        setSaved(state())
-    
-    })
 
     return(
         <PaperDrawer.Section style={styles.drawer}>
@@ -39,11 +27,11 @@ export const ItemsDrawer = props => {
             <PaperDrawer.Section>
             <Drawer.Section style={styles.row}>
                 <Drawer.Section style={styles.section}>
-                    <Paragraph style={styles.paragraph}>{learnt}</Paragraph>
+                    <Paragraph style={styles.paragraph}>{wordsLearnt}%</Paragraph>
                     <Caption style={styles.caption}>Learnt</Caption>
                 </Drawer.Section>
                 <Drawer.Section style={styles.section}>
-                    <Paragraph style={styles.paragraph}>{saved}</Paragraph>
+                    <Paragraph style={styles.paragraph}>{wordsSaved}</Paragraph>
                     <Caption style={styles.caption}>Saved</Caption>
                 </Drawer.Section>
             </Drawer.Section>
@@ -53,8 +41,6 @@ export const ItemsDrawer = props => {
                 <PaperDrawer.Item icon="filter" label="Filter" onPress={()=>props.navigation.navigate('Filter')}/>
                 <PaperDrawer.Item icon="brain" label="Studying" onPress={()=>props.navigation.navigate('Studying')}/>
                 <PaperDrawer.Item icon="bookshelf" label="Learnt" onPress={()=>props.navigation.navigate('Learnt')}/>
-                <PaperDrawer.Item icon="database-export" label="Export CSV" onPress={()=>{}} />
-                <PaperDrawer.Item icon="database-import" label="Import CSV" onPress={()=>{}} />
             </PaperDrawer.Section>
             <Text style={styles.titleName}>About</Text>
                 <PaperDrawer.Section style={styles.section}>

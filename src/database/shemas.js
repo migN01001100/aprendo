@@ -127,21 +127,3 @@ export const Config = {
     },
     primaryKey: "_id"
 };
-
-export const Shema = {
-    name: 'Task',
-    properties: {
-      _id: 'int',
-      _partition: 'string',
-    },
-    primaryKey: '_id',
-  };
-
-export const UserData ={
-    name:'User',
-    properties:{
-        email:{type: "string", default:"none"},
-        pass: {type: "string", default:"none"},
-        status: {type: "bool", default:false}
-    }
-}

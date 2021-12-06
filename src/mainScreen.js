@@ -1,52 +1,22 @@
 import React from 'react';
-import { View, StyleSheet, AppState, TextInput, Animated} from 'react-native';
-import {FAB, Appbar, IconButton} from  'react-native-paper';
+import { View, StyleSheet, TextInput, Animated} from 'react-native';
+import {FAB, Appbar, IconButton, Caption} from  'react-native-paper';
 import {DrawerActions} from '@react-navigation/native';
 import Carousel from 'react-native-snap-carousel';
-import {realm, initConfig, realmForIndex, realmSelect, realmAllObjects} from './database/realm';
+import { useSchemas } from './providers/schemasProvider';
 
-// check first Config initialization
-const initDB = ()=>{
-  if (realm.objects("Config").length === 0){
-    initConfig()
-    //console.log("Initialized DB")
-  }else{
-    //console.log("Not initialized DB")
-  }
-}
-const init = initDB() // initialize DB
-export const config = realm.objects("Config")[0] //set configuration to the app
-export const state = ()=>realm.objects(config.db).length // check db for data to update once at the beginnig
-config.state = false
 
-//filter words
-let tempList = []
-const _selectObjects = filter=>{
-  tempList =[]
-  const objects = realmAllObjects(config.db)
-  objects.map(hasit=>{
-    let bool = false
-    let array = hasit.category
-    array.map(each=>{
-      if(each === filter){
-          bool = true
-      }else if(each === 'learnt'){
-          bool = false
-      }
-    })
-    if(bool){
-      tempList.push(hasit)
-    }
-  })
-}
+
 
 const Main = ({navigation}) => {
-  const [list, setList] = React.useState()  //always use it to control data-carousel 
+  const {schemas, schemaConfig, modifyCategory} = useSchemas() 
   const [stateFab, setStateFab] = React.useState(false)
   const [ref, setRef] = React.useState()
   const [pointerA, setPointerA] = React.useState() //helps to calculate index of item
   const [pointerB, setPointerB] = React.useState() //helps to calculate index of item
-
+  
+  const realmRef = React.useRef(null)
+ 
   const onStateChange = ()=>{
     if(stateFab){
       setStateFab(false)
@@ -55,79 +25,42 @@ const Main = ({navigation}) => {
     }
   }
 
-  const _handleState = ()=>{
-    if (AppState.currentState.match(/inactive|background/)){
-      //console.log("inactive")
-    }else{
-      if(!config.state && state() > 0){ // state first a variable, after changed to func check if working
-        _selectObjects(config.filter)
-        setList(tempList)   // if state db has data and you beggin the app set initial list data
-        config.state = true // once list is setted don't come back here
-        console.log("once entered!")
-      }
-      //console.log('active')
-    }
-  }
-
-  React.useEffect(()=>{
-    AppState.addEventListener("change", _handleState)
-
-    realm.addListener("change",()=>{
-      _selectObjects(config.filter)
-      setList(tempList)   // on db changes reset list
-    }) 
-  })
-  const modifyCategoryDB = (tag,pointer)=>{
-    const _index = realmForIndex(config.db,list[pointer]._id)
-    const itemObject = realmSelect(config.db,_index)
-    const itemCategories = itemObject.category
-    let bool = false
-    itemCategories.map(item=>{
-      if(item === tag){
-         bool = true
-      }
-    })
-    if(!bool){
-      realm.write(()=>{
-        itemObject.category = [...itemCategories,tag]
-      }) 
-    }
-  }
-
   const _calculateRef = (tag) =>{
     if(pointerA<pointerB){
-      modifyCategoryDB(tag,pointerB)
+      modifyCategory(tag, pointerB, schemas)
     }else if(pointerA === undefined){  // when is not defined yet 
-       modifyCategoryDB(tag,0)
+       modifyCategory(tag, 0, schemas)
     }else{
-      modifyCategoryDB(tag,pointerB)   
+      modifyCategory(tag, pointerB, schemas)   
     }
   }
+
+  console.log(schemas)
+  console.log(schemas.length)
     return(
         <View style={styles.mainContainer}>
           <Appbar.Header>
               <Appbar.Action icon="menu" onPress={()=>navigation.dispatch(DrawerActions.openDrawer())} />
-              <Appbar.Content title={config.db} subtitle={config.filter}/>
-          </Appbar.Header>
+              <Appbar.Content title={`${schemaConfig.db}`} subtitle={`${schemaConfig.filter}`} />
+          </Appbar.Header>{schemas.length === 0?
+          <IsEmpty/>:
             <Carousel
               ref={ref=>setRef(ref)}
-              layout={'tinder'} 
+              layout={'tinder'}
               layoutCardOffset={15}
-              data={list?list:[]}
+              data={schemas?schemas:[]}
               renderItem={DataCards}
               sliderWidth={400}
               itemWidth={600}
               onBeforeSnapToItem={()=>setPointerA(ref.currentIndex)}
               onSnapToItem={()=>setPointerB(ref.currentIndex)}
               activeAnimationType='decay'
-              />
+              />}
               <FAB.Group
                 open={stateFab}
                 icon={stateFab ? 'feather' : 'notebook-outline'}
                 actions={[
-                  { icon: 'plus', onPress: () => {
-                    navigation.navigate('Word')
-                  } },
+                  { icon: 'plus', onPress: () => {navigation.navigate('Word')} },
                   {
                     icon: 'brain',
                     label: 'Studying',
@@ -156,6 +89,16 @@ const Main = ({navigation}) => {
     )   
 }
 
+const IsEmpty = ()=>{
+
+  return(
+    <View style={styles.isEmptyContainer}>
+      <IconButton icon="robot" size={100} />
+      <Caption style={styles.isEmptyText}>No Elements to show</Caption>
+    </View>
+  )
+}
+
 //All components attached to theme changin in this section must be out of react paper to avoid buging
 //due to paper's incompatibility them with native animation Driver setted true.
 
@@ -177,6 +120,7 @@ const DataCards = ({item}) => (
 )
 
 const Cards = props =>{
+  const { changeWord, deleteWord} = useSchemas()
   const [active, setActive] = React.useState(false)
 
   const [word, setWord] = React.useState(props.word)
@@ -484,48 +428,20 @@ const returnColorGray = () =>{
             onChangeText={text=>setBottomRight(text)}>{props.bottomRight}</TextInput>
           <Appbar.Action style={styles.modify} color='#00dac4' icon={active?"content-save-outline":"square-edit-outline"} 
           onPress={()=>{
-            _changeState()
             setOpenColor(false)
-            _changeWord(props._id)(active)(word)(primary)(secondary)(topLeft)(bottomLeft)(topRight)(mSecondary)(middle)(bottomRight)(color)
+            changeWord(props._id)(active)(word)(primary)(secondary)(topLeft)(bottomLeft)(topRight)(mSecondary)(middle)(bottomRight)(color)
+            _changeState()
           }} />
           {active?<Appbar.Action style={styles.delete} color='#00dac4' icon="delete" 
           onPress={()=>{
-            _deleteWord(props._id)
+            deleteWord(props._id)
+            _changeState()
             }} />:<View/>}
       </View>
     </View>
   )
 }
 
-const _changeWord = id => active => word => primary => secondary => topLeft => bottomLeft => topRight => mSecondary => middle => bottomRight => color =>{
-  if(!active){
-    return
-  }else{
-    const _item = realmForIndex(config.db,id) //search index of object to modify
-    
-    realm.write(()=>{
-      const itemIndex = realmSelect(config.db,_item) // select object via index
-      
-      itemIndex.word = word
-      itemIndex.primary = primary
-      itemIndex.color= color
-      itemIndex.secondary = secondary
-      itemIndex.topLeft = topLeft
-      itemIndex.bottomLeft = bottomLeft
-      itemIndex.topRight = topRight
-      itemIndex.mSecondary = mSecondary
-      itemIndex.middle = middle
-      itemIndex.bottomRight = bottomRight
-    })
-  }
-}
-const _deleteWord = id => {
-  const _item = realm.objectForPrimaryKey(config.db, id)
-
-  realm.write(()=>{
-    realm.delete(_item)
-  })
-}
 const styles = StyleSheet.create({
     mainContainer:{
         flex: 1
@@ -654,7 +570,15 @@ const styles = StyleSheet.create({
         margin:16,
         left:20,
         top: 90
-      }
+      },
+      isEmptyContainer:{
+        flex:1,
+        alignItems:'center',
+        justifyContent:'center'
+      },
+      isEmptyText:{
+        fontSize:20
+      },
   });
 
 export default Main;

@@ -1,18 +1,21 @@
 import React from 'react';
 import {View, StyleSheet, ScrollView} from 'react-native';
 import {Appbar, Card} from 'react-native-paper';
-import { realm, realmAllObjects, realmForIndex, realmSelect } from './database/realm';
-import { config } from './mainScreen';
+import { useSchemas } from './providers/schemasProvider';
 
-const db = realmAllObjects(config.db)
 const objName = "studying"
 
 export const StudyingScreen = ({navigation})=>{
-    const [list, setList] = React.useState(_filterObjects(objName)) 
+    const {studying} = useSchemas()
+    const [list, setList] = React.useState(studying)
 
-    realm.addListener('change',()=>{
-        setList(_filterObjects(objName))
-    })
+    React.useEffect(()=>{
+        
+        return ()=>{
+            setList(studying)
+        }
+    },[studying])
+
     return(
         <View style={styles.mainContainer}>
             <Appbar.Header>
@@ -33,47 +36,19 @@ export const StudyingScreen = ({navigation})=>{
     )
 }
 const WordsList = props=>{
-
+    const {deleteFromFilter, schemaConfig} = useSchemas()
 
     return(
         <Card style={styles.listContainer}>
             <Card.Title
              title={props.word}
              subtitle={props.translation}
-             right={()=><Appbar.Action color="#00dac4" icon="delete-outline" onPress={()=>{_deleteFilter(props.id,config.db,objName)}} />}
+             right={()=><Appbar.Action color="#00dac4" icon="delete-outline" onPress={()=>{
+                deleteFromFilter(props.id,schemaConfig.db,objName)
+                }} />}
             />
         </Card>
     )
-}
-
-export const _deleteFilter = (id, db, filter)=> {
-    const _index = realmForIndex(db,id)
-    const _selectObj = realmSelect(db,_index)
-    const categories = _selectObj.category
-    const _filterCat = categories.filter(x => x !== filter)
-    
-    realm.write(()=>{
-        _selectObj.category = [..._filterCat]
-    })
-}
-
-
-export const _filterObjects = filter => {
-    const selectedObjects = []
-    db.map(item=>{
-        let bool = false
-        let array
-        array = item.category
-        array.map(search=>{
-            if(search === filter){
-                bool = true
-            }
-        })
-        if(bool){
-            selectedObjects.push(item)
-        }
-    })
-    return selectedObjects
 }
 
 

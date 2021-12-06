@@ -1,5 +1,4 @@
 import Realm from 'realm';
-import * as frame from './shemas'
 
 export const Config = {
     name: "Config",
@@ -11,22 +10,28 @@ export const Config = {
     primaryKey: "_id"
 };
 
-
-export const realm = new Realm({
-    schema:[frame.German, frame.Spanish , frame.Russian, frame.Ukrainian, frame.English, frame.French, Config],
-    schemaVersion:11
-})
-
-export const initConfig = ()=> {realm.write(() => {
-        realm.create("Config",{})
-  })
+export const _getRealmApp = ()=>{
+    let app
+    const appID = 'lernkarten-bvadp'
+    const appConfig = {
+        id: appID,
+        timeOut: 10000
+    }
+    app = new Realm.App(appConfig)
+    return app
 }
 
-export const realmOpen = (collections) => Realm.open({schema:collections, schemaVersion:5});
-export const realmClose = () => realm.close();
-//return objects 
-export const realmAllObjects = db => realm.objects(db) 
-//search index 
-export const realmForIndex = (dbName, id)=> realm.objects(dbName).findIndex(index=>index._id == id)
-//select object
-export const realmSelect = (dbName,item) => realm.objects(dbName)[item]
+export const user = _getRealmApp().currentUser
+
+const _authenticateUser = async()=>{
+    let user
+    try{
+        const app = _getRealmApp()
+
+        const credentials = Realm.Credentials.emailPassword("mga8919@gmail.com","123456")
+        user = await app.logIn(credentials)
+        return user
+    }catch(e){
+        throw `Something went wrong with the login step. Error > ${e}`
+    }
+}

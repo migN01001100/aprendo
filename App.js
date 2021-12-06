@@ -18,6 +18,7 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import { ItemsDrawer } from './src/drawerSection';
 import { SelectLanguageScreen } from './src/languageScreen'
 import merge from 'deepmerge';
+import { SchemaProvider } from './src/providers/schemasProvider';
 
 const Drawer = createDrawerNavigator();
 const combinedDefaultTheme = merge(PaperDefaultTheme,NavigationDefaultTheme);
@@ -39,6 +40,7 @@ const App = () => {
   return (
       <PaperProvider theme={switchTheme}>
         <NavigationContainer theme={switchTheme}>
+          <SchemaProvider>
             <Drawer.Navigator initialRouteName="Home" drawerContent={({navigation})=>
             <ItemsDrawer 
             themeIco={theme?"weather-sunny":"weather-night"}
@@ -52,6 +54,7 @@ const App = () => {
               <Drawer.Screen name="Studying" component={StudyingScreen} />
               <Drawer.Screen name="Learnt" component={LearntScreen} />
             </Drawer.Navigator>
+          </SchemaProvider>  
         </NavigationContainer>
       </PaperProvider>
   );

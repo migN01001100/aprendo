@@ -1,8 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView, Animated } from 'react-native';
 import { FAB, TextInput, Appbar, Chip, Snackbar, IconButton, Caption, HelperText } from 'react-native-paper';
-import {realm, realmAllObjects} from './database/realm';
-import { config } from './mainScreen';
+import { useSchemas } from './providers/schemasProvider';
 
 const colors ={
     blue:'#0066ff',
@@ -14,6 +13,7 @@ let color = '' //save color for DB
 let flag = false
 let copyCat = []
 export const WordScreen = ({navigation}) => {
+    const {schemas, addWord} = useSchemas()
     const [main, setMain] = React.useState('')
     const [category, setCategory] = React.useState('')
     
@@ -125,16 +125,14 @@ export const WordScreen = ({navigation}) => {
     }
 
     const handleErrorMain = (text) =>{
-        const dbObject = realmAllObjects(config.db)
         let word = []
-        dbObject.map(item=>word.push(item.word))
+        schemas.map(item=>word.push(item.word))
         return word.includes(text)
     }
 
     const setObjects = new Set()
     const _getAutoComplete = () =>{
-        const dbObjects = realmAllObjects(config.db)
-        dbObjects.map(item=>{
+        schemas.map(item=>{
             let eachObject = item.category
             eachObject.map(each=>{
                 if(each !== "studying" && each !== "learnt"){
@@ -292,7 +290,7 @@ export const WordScreen = ({navigation}) => {
                             if (main == "" || handleErrorMain(main)){
                                 setWarn(true)
                             }else{
-                            addNewWord(main)(chip.length == 0?["all"]:chip)(color)(translation)(primary)(secondary)(middle)(mSecondary)(topLeft)(topRight)(bottomLeft)(bottomRight)
+                            addWord(main)(chip.length == 0?["all"]:chip)(color)(translation)(primary)(secondary)(middle)(mSecondary)(topLeft)(topRight)(bottomLeft)(bottomRight)
                             navigation.navigate('Home')
                             setQuery(_getAutoComplete())
                             setMain("")
@@ -317,26 +315,6 @@ export const WordScreen = ({navigation}) => {
             </View>
         
     )
-}
-const addNewWord = word => category => color => translation => primary => secondary => middle => mSecondary => topLeft => topRight => bottomLeft => bottomRight => {
-    let random = Math.random().toString(9).substr(2,5);
-    realm.write(()=>{
-        realm.create(config.db,{
-            _id: parseInt(random),
-            word,
-            category,
-            color,
-            translation,
-            primary,
-            secondary,
-            middle,
-            mSecondary,
-            topLeft,
-            topRight,
-            bottomLeft,
-            bottomRight
-        });
-    })
 }
 
 const Notification = props =>{
