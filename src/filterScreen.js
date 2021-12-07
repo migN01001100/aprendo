@@ -9,12 +9,10 @@ export const FilterScreen = ({navigation}) => {
     const [checked, setChecked] = React.useState(schemaConfig.filter)
     const [loadCategories, setLoadCategories] = React.useState(categories)
 
-    console.log(categories)
     React.useEffect(()=>{
-            console.log("mounted filters")
+            
         return ()=>{
             setLoadCategories(categories)
-            console.log("unmounted filters")
         }
     },[loadCategories])
 

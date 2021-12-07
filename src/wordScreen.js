@@ -13,7 +13,7 @@ let color = '' //save color for DB
 let flag = false
 let copyCat = []
 export const WordScreen = ({navigation}) => {
-    const {schemas, addWord} = useSchemas()
+    const {schemas, addWord, isNotStudyNorLearnt} = useSchemas()
     const [main, setMain] = React.useState('')
     const [category, setCategory] = React.useState('')
     
@@ -130,19 +130,8 @@ export const WordScreen = ({navigation}) => {
         return word.includes(text)
     }
 
-    const setObjects = new Set()
-    const _getAutoComplete = () =>{
-        schemas.map(item=>{
-            let eachObject = item.category
-            eachObject.map(each=>{
-                if(each !== "studying" && each !== "learnt"){
-                    setObjects.add(each)  
-                }
-            })
-        })
-        return Array.from(setObjects)
-    }
-    const [query, setQuery] = React.useState(_getAutoComplete())
+    
+    const [query, setQuery] = React.useState(isNotStudyNorLearnt)
     
     const _match = (word, list)=> {
         let regex = new RegExp("\\b"+word+"\\w*","gi")
@@ -170,16 +159,16 @@ export const WordScreen = ({navigation}) => {
                     break;
                 case 'empty':
                     if(chip.length === 0){
-                        setQuery(_getAutoComplete())
+                        setQuery(isNotStudyNorLearnt)
                     }else{
                         let copyCat = chip.toString() 
-                        setQuery(_getAutoComplete().filter(x => !copyCat.includes(x)))
+                        setQuery(isNotStudyNorLearnt.filter(x => !copyCat.includes(x)))
                     }
-                    flag = false
+                        flag = false
                     break;
                 case 'checkList':
                     setQuery(()=>_match(word,query))
-                    copyCat = _getAutoComplete().filter(x => x !== query.toString())
+                    copyCat = isNotStudyNorLearnt.filter(x => x !== query.toString())
                     if(setLast >= 2){
                         flag = true
                     }
@@ -189,7 +178,6 @@ export const WordScreen = ({navigation}) => {
             }   
     }
     return (
-        
             <View style={styles.father}>
                 <Appbar.Header>
                     <Appbar.BackAction onPress={()=>navigation.goBack()}/>
@@ -292,7 +280,7 @@ export const WordScreen = ({navigation}) => {
                             }else{
                             addWord(main)(chip.length == 0?["all"]:chip)(color)(translation)(primary)(secondary)(middle)(mSecondary)(topLeft)(topRight)(bottomLeft)(bottomRight)
                             navigation.navigate('Home')
-                            setQuery(_getAutoComplete())
+                            setQuery(isNotStudyNorLearnt)
                             setMain("")
                             setChip([])
                             color = ''

@@ -35,8 +35,6 @@ const Main = ({navigation}) => {
     }
   }
 
-  console.log(schemas)
-  console.log(schemas.length)
     return(
         <View style={styles.mainContainer}>
           <Appbar.Header>
@@ -82,7 +80,13 @@ const Main = ({navigation}) => {
             style={styles.restartFAB}
             small
             icon='restart'
-            onPress={()=>ref.snapToItem(0)}
+            onPress={()=>{
+              try{
+                ref.snapToItem(0)
+              }catch(e){
+                //console.log(`reference is empty ${e}`)
+              }
+            }}
           />
         </View>
        

@@ -14,6 +14,7 @@ const SchemaProvider = ({children}) =>{
     const [DBNames, setDBNames] = React.useState([])
     const [schemas, setSchemas] = React.useState([])
     const [schemaConfig, setSchemaConfig] = React.useState({})
+    const [isNotStudyNorLearnt, setIsNotStudyNorLearnt] = React.useState([])
  
     const realmRef = React.useRef(null)
 
@@ -51,6 +52,7 @@ const SchemaProvider = ({children}) =>{
             setCategories(getCategories(syncSchemas))
             setWordsSaved(syncSchemas.length)
             setWordsLearnt(filterObjects("learnt",syncSchemas).length*100/syncSchemas.length)
+            setIsNotStudyNorLearnt(getAutoComplete(syncSchemas))
 
             if(syncSchemaConfig == ""){ //initConfigDB
                 realm.write(()=>{
@@ -67,10 +69,9 @@ const SchemaProvider = ({children}) =>{
                 setCategories(getCategories(syncSchemas))
                 setWordsSaved(syncSchemas.length)
                 setWordsLearnt(filterObjects("learnt",syncSchemas).length*100/syncSchemas.length)
-                console.log("Something has been changed!")
+                setIsNotStudyNorLearnt(getAutoComplete(syncSchemas))
             })
         })
-
         return ()=>{
             const realm = realmRef.current
             if(realm){
@@ -84,6 +85,18 @@ const SchemaProvider = ({children}) =>{
         }
     },[user])
 
+    const setObjects = new Set()
+    const getAutoComplete = (schemas) =>{
+        schemas.map(item=>{
+            let eachObject = item.category
+            eachObject.map(each=>{
+                if(each !== "studying" && each !== "learnt"){
+                    setObjects.add(each) 
+                }
+            })
+        })
+        return Array.from(setObjects)
+    }
     //Remove lernt words
     const removeLearntWords = (schemas)=> {
         const tempList =[]
@@ -279,6 +292,7 @@ const SchemaProvider = ({children}) =>{
             categories,
             wordsSaved,
             wordsLearnt,
+            isNotStudyNorLearnt,
             languageChange,
             changeWord,
             deleteWord,
