@@ -11,18 +11,20 @@ import {
 } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
 import { useSchemas } from './providers/schemasProvider';
+import { useAuth } from './providers/authProvider';
 
 
 export const ItemsDrawer = props => {
     const {wordsSaved, wordsLearnt} = useSchemas()
+    const {user, signOut} = useAuth()
     
 
     return(
         <PaperDrawer.Section style={styles.drawer}>
             <Appbar.Action icon={props.themeIco} onPress={props.action} style={styles.themeIco} color="#a7a7a7" />
-            <Avatar.Text style={styles.avatar} size={50} label="MZ"/>
-            <Title style={styles.name}>Mike Zozulia</Title>
-            <Caption style={styles.name}>@Gojira_team</Caption>
+            <Avatar.Text style={styles.avatar} size={50} label="CU"/>
+            <Title style={styles.name}>Custom User</Title>
+            <Caption style={styles.name}>@CustomUser</Caption>
             <Text style={styles.titleName}>Words:</Text>
             <PaperDrawer.Section>
             <Drawer.Section style={styles.row}>
@@ -41,12 +43,9 @@ export const ItemsDrawer = props => {
                 <PaperDrawer.Item icon="filter" label="Filter" onPress={()=>props.navigation.navigate('Filter')}/>
                 <PaperDrawer.Item icon="brain" label="Studying" onPress={()=>props.navigation.navigate('Studying')}/>
                 <PaperDrawer.Item icon="bookshelf" label="Learnt" onPress={()=>props.navigation.navigate('Learnt')}/>
+                <PaperDrawer.Item icon="information-outline" label="About" onPress={()=>{}}/>
             </PaperDrawer.Section>
-            <Text style={styles.titleName}>About</Text>
-                <PaperDrawer.Section style={styles.section}>
-                    <Caption style={styles.caption}>Version:</Caption>
-                    <Caption style={styles.caption}>0.0.1</Caption>
-                </PaperDrawer.Section>
+                    <PaperDrawer.Item style={styles.bottomSection} icon="location-exit" label="Sign Out" onPress={()=>signOut()}/>
         </PaperDrawer.Section>        
     )};
 const styles = StyleSheet.create({

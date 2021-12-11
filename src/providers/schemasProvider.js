@@ -1,11 +1,12 @@
 import React from 'react';
 import Realm from 'realm';
-import { user, Config } from '../database/realm';
 import * as schema from '../database/shemas';
+import { useAuth } from './authProvider';
 
 const SchemaContext = React.createContext(null)
 
 const SchemaProvider = ({children}) =>{
+    const {user, preset} = useAuth()
     const [wordsSaved, setWordsSaved] = React.useState(0)
     const [wordsLearnt, setWordsLearnt] = React.useState(0)
     const [studying, setStudying] = React.useState([])
@@ -18,57 +19,53 @@ const SchemaProvider = ({children}) =>{
  
     const realmRef = React.useRef(null)
 
-    React.useEffect(()=>{
-
+    React.useLayoutEffect(()=>{
         const openRealmBehaviourConfig = {
             type: "openImmediately"
         }
         const config = {
-            schema:[schema.German, schema.Spanish , schema.Russian, schema.Ukrainian, schema.English, schema.French, Config],
+            schema:[schema.German, schema.Spanish , schema.Russian, schema.Ukrainian, schema.English, schema.French, schema.Config],
             sync:{
                 user,
-                partitionValue: "61a36113bf67498fc92a9888",
+                partitionValue: user.id,
                 newRealmFileBehavior: openRealmBehaviourConfig,
                 existingRealmFileBehavior: openRealmBehaviourConfig
             }
         }
-
+        
         Realm.open(config).then(realm=>{
             realmRef.current = realm
+            const tempNonSyncShemaConfig = {_id: 0, db: "English", filter: "verb"}
+            const syncShemaConfig = realm.objects("Config")[0]
+            const syncConfig = syncShemaConfig || tempNonSyncShemaConfig
 
             const DBschemas = realm.schema
             const langSchemas = DBschemas.map(item=>item.name)
-            const filetedLangSchemas = langSchemas.filter(item=>item != "Config")
+            const filteredLangSchemas = langSchemas.filter(item=>item != "Config")
             
-            setDBNames(filetedLangSchemas)
-
-            const syncSchemaConfig = realm.objects("Config")[0]
-            const syncSchemas = realm.objects(syncSchemaConfig.db)
-
-            setSchemaConfig(syncSchemaConfig)
-            setSchemas(isFilter(removeLearntWords(syncSchemas),syncSchemaConfig.filter))
+            setDBNames(filteredLangSchemas)
+            const syncSchemas = realm.objects(syncConfig.db)
+        
+            setSchemaConfig(syncConfig)
+            setSchemas(isFilter(removeLearntWords(syncSchemas),syncConfig.filter))
             setStudying(filterObjects("studying",removeLearntWords(syncSchemas)))
             setLearnt(filterObjects("learnt",syncSchemas))
             setCategories(getCategories(syncSchemas))
             setWordsSaved(syncSchemas.length)
-            setWordsLearnt(filterObjects("learnt",syncSchemas).length*100/syncSchemas.length)
+            setWordsLearnt((filterObjects("learnt",syncSchemas).length*100/syncSchemas.length).toFixed(2))
             setIsNotStudyNorLearnt(getAutoComplete(syncSchemas))
 
-            if(syncSchemaConfig == ""){ //initConfigDB
-                realm.write(()=>{
-                    realm.create("Config",{})
-                })
-            }
+            
             realm.addListener("change",()=>{
-                const syncSchemaConfig = realm.objects("Config")[0]
-                const syncSchemas = realm.objects(syncSchemaConfig.db)
-                setSchemaConfig(syncSchemaConfig)
-                setSchemas(isFilter(removeLearntWords(syncSchemas),syncSchemaConfig.filter))
+                const syncConfig = realm.objects("Config")[0]
+                const syncSchemas = realm.objects(syncConfig.db)
+                setSchemaConfig(syncConfig)
+                setSchemas(isFilter(removeLearntWords(syncSchemas),syncConfig.filter))
                 setStudying(filterObjects("studying",removeLearntWords(syncSchemas)))
                 setLearnt(filterObjects("learnt",syncSchemas))
                 setCategories(getCategories(syncSchemas))
                 setWordsSaved(syncSchemas.length)
-                setWordsLearnt(filterObjects("learnt",syncSchemas).length*100/syncSchemas.length)
+                setWordsLearnt((filterObjects("learnt",syncSchemas).length*100/syncSchemas.length).toFixed(2))
                 setIsNotStudyNorLearnt(getAutoComplete(syncSchemas))
             })
         })
@@ -78,9 +75,6 @@ const SchemaProvider = ({children}) =>{
                 realm.removeAllListeners()
                 realm.close()
                 realmRef.current = null
-                setSchemas([])
-                setSchemaConfig()
-                setDBNames([])
             }
         }
     },[user])

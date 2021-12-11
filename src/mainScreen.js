@@ -97,7 +97,7 @@ const IsEmpty = ()=>{
 
   return(
     <View style={styles.isEmptyContainer}>
-      <IconButton icon="robot" size={100} />
+      <IconButton icon="bag-personal-outline" size={100} />
       <Caption style={styles.isEmptyText}>No Elements to show</Caption>
     </View>
   )
@@ -461,12 +461,12 @@ const styles = StyleSheet.create({
       },
       card:{
         position:'relative',
-        width:350,
+        width:"64%",
         height:250,
         borderRadius:10,
         borderTopEndRadius:100,
         backgroundColor:'#fffff5',
-        marginLeft:'4%'
+        marginLeft:"1%"
       },
       word:{
         position:'absolute',

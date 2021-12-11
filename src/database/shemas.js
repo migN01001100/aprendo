@@ -118,6 +118,26 @@ export const French = {
     primaryKey: "_id"
 };
 
+export const Turkish = {
+    name: "Turkish",
+    properties:{
+        _id:"int",
+        word:"string",
+        category:"string[]",
+        color:"string",
+        translation:"string",
+        primary:"string",
+        secondary:"string",
+        middle:"string",
+        mSecondary:"string",
+        topLeft:"string",
+        topRight:"string",
+        bottomLeft:"string",
+        bottomRight:"string"
+    },
+    primaryKey: "_id"
+};
+
 export const Config = {
     name: "Config",
     properties:{
