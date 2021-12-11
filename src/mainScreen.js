@@ -49,7 +49,7 @@ const Main = ({navigation}) => {
               data={schemas?schemas:[]}
               renderItem={DataCards}
               sliderWidth={400}
-              itemWidth={600}
+              itemWidth={400}
               onBeforeSnapToItem={()=>setPointerA(ref.currentIndex)}
               onSnapToItem={()=>setPointerB(ref.currentIndex)}
               activeAnimationType='decay'
@@ -457,16 +457,16 @@ const styles = StyleSheet.create({
         bottom: 0
     },
     container:{
-        paddingTop:'30%'
+        flex:1,
+        alignItems:'center',
+        justifyContent: 'center'
       },
       card:{
-        position:'relative',
-        width:"64%",
+        width: 350,
         height:250,
         borderRadius:10,
         borderTopEndRadius:100,
-        backgroundColor:'#fffff5',
-        marginLeft:"1%"
+        backgroundColor:'#fffff5'
       },
       word:{
         position:'absolute',
