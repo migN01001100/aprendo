@@ -8,43 +8,7 @@ const AuthContext = React.createContext(null)
 const AuthProvider = ({children})=>{
     const currentUser = realmApp().currentUser
     const [user, setUser] = React.useState(currentUser)
-    const [preset, setPreset] = React.useState({})
-    const realmRef = React.useRef(null)
-
-    React.useEffect(()=>{
-        if(!user){
-            return;
-        }
-            const config = {
-                sync:{
-                    user,
-                    partitionValue:user.id
-                }
-            }
-            Realm.open(config).then(realm=>{
-                realmRef.current = realm
-                const syncSchemaConfig = realm.objects("Config")[0]
-                setPreset({_id: 0, db: "English", filter: "verb"})
-                if(syncSchemaConfig.db){ //initConfigDB
-                    console.log("DB is already created: " + syncSchemaConfig.db)
-                    // setSyncSettings(settings)
-                    // console.log(`schema is: ${settings.db}`)
-                }else{
-                    console.log("DB must be created")
-                    // realm.write(()=>{
-                    //     realm.create("Config",{})
-                    //     new Realm(config)
-                    //     setSyncSettings(realm.objects("Config")[0])
-                    // })
-                }
-            })
-        
-        return ()=>{
-            const realm = realmRef.current
-            realm.close()
-            realmRef.current = null
-        }
-    },[])
+    const [preset] = React.useState({})
 
     const signIn = async(email, pass)=>{
         try{

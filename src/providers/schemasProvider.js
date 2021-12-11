@@ -6,7 +6,7 @@ import { useAuth } from './authProvider';
 const SchemaContext = React.createContext(null)
 
 const SchemaProvider = ({children}) =>{
-    const {user, preset} = useAuth()
+    const {user} = useAuth()
     const [wordsSaved, setWordsSaved] = React.useState(0)
     const [wordsLearnt, setWordsLearnt] = React.useState(0)
     const [studying, setStudying] = React.useState([])
