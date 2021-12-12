@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, StyleSheet, TextInput, Animated} from 'react-native';
-import {FAB, Appbar, IconButton, Caption} from  'react-native-paper';
+import { View, StyleSheet, TextInput, Animated, TouchableHighlight, Text} from 'react-native';
+import {FAB, Appbar, IconButton, Caption, Dialog} from  'react-native-paper';
 import {DrawerActions} from '@react-navigation/native';
 import Carousel from 'react-native-snap-carousel';
 import { useSchemas } from './providers/schemasProvider';
@@ -109,6 +109,7 @@ const IsEmpty = ()=>{
 const DataCards = ({item}) => (
   <Cards
     _id={item._id}
+    translation={item.translation}
     word={item.word}
     color={item.color}
     primary={item.primary}
@@ -136,6 +137,8 @@ const Cards = props =>{
   const [mSecondary, setMsecondary] = React.useState(props.mSecondary)
   const [middle, setMiddle] = React.useState(props.middle)
   const [bottomRight, setBottomRight] = React.useState(props.bottomRight)
+  const [showTranslation, setShowTranslation] = React.useState(false)
+  const hideShowTranslation = ()=> setShowTranslation(false)
   let color = props.color
 
   const [openColor, setOpenColor] = React.useState(false)
@@ -392,59 +395,74 @@ const returnColorGray = () =>{
 }
   return(
     <View style={styles.container} key={props._id}>
-      <View style={styles.card}>
-          <TextInput editable={active} style={styles.word}
-            onChangeText={text=>setWord(text)}>{props.word}</TextInput>
-            {openColor?
-              <View style={styles.colorContainer}>
-                {startColor()}
-                <Animated.View style={[styles.chooseBlueColor,{opacity:animBlue, top:animBlueY, left:animBlueX}]}>
-                  <IconButton icon="circle" color={colors.blue} onPress={()=>{returnColorBlue()}} />
-                </Animated.View>      
-                <Animated.View style={[styles.chooseRedColor,{opacity:animRed, top:animRedY, left:animRedX}]}>
-                  <IconButton icon="circle" color={colors.red} onPress={()=>{returnColorRed()}} />
-                </Animated.View>      
-                <Animated.View style={[styles.chooseGreenColor,{opacity:animGreen, top:animGreenY, left:animGreenX}]}>
-                  <IconButton icon="circle" color={colors.green} onPress={()=>{returnColorGreen()}} />
-                </Animated.View>      
-                <Animated.View style={[styles.chooseGrayColor,{opacity:animGray, top:animGrayY, left:animGrayX}]}>
-                  <IconButton icon="circle" color={colors.gray} onPress={()=>{returnColorGray()}} />
-                </Animated.View>
-              </View>
-            :<View/>}
-          <IconButton style={styles.gender} icon="circle" color={props.color?props.color:'#e6e6e6'} 
-          onPress={active?_openColorSelector:false} />
-          <TextInput editable={active} style={styles.primary}
-            onChangeText={text=>setPrimary(text)}>{props.primary}</TextInput>
-          <TextInput editable={active} style={styles.secondary}
-            onChangeText={text=>setSecondary(text)}>{props.secondary}</TextInput>
-          <TextInput editable={active} style={styles.topLeft}
-            onChangeText={text=>setTopLeft(text)}>{props.topLeft}</TextInput>
-          <TextInput editable={active} style={styles.bottomLeft}
-            onChangeText={text=>setBottomLeft(text)}>{props.bottomLeft}</TextInput>
-          <TextInput editable={active} style={styles.topRight}
-            onChangeText={text=>setTopRight(text)}>{props.topRight}</TextInput>
-          <TextInput editable={active} style={styles.plural}
-            onChangeText={text=>setMsecondary(text)}>{props.mSecondary}</TextInput>
-          <TextInput editable={active} style={styles.middle}
-            onChangeText={text=>setMiddle(text)}>{props.middle}</TextInput>
-          <TextInput editable={active} style={styles.bottomRight}
-            onChangeText={text=>setBottomRight(text)}>{props.bottomRight}</TextInput>
-          <Appbar.Action style={styles.modify} color='#00dac4' icon={active?"content-save-outline":"square-edit-outline"} 
-          onPress={()=>{
-            setOpenColor(false)
-            changeWord(props._id)(active)(word)(primary)(secondary)(topLeft)(bottomLeft)(topRight)(mSecondary)(middle)(bottomRight)(color)
-            _changeState()
-          }} />
-          {active?<Appbar.Action style={styles.delete} color='#00dac4' icon="delete" 
-          onPress={()=>{
-            deleteWord(props._id)
-            _changeState()
-            }} />:<View/>}
-      </View>
+      <TouchableHighlight onLongPress={()=>setShowTranslation(true)} underlayColor="#b3fff7" style={styles.card} >
+        <View style={styles.card}>
+            <TextInput editable={active} style={styles.word}
+              onChangeText={text=>setWord(text)}>{props.word}</TextInput>
+              {openColor?
+                <View style={styles.colorContainer}>
+                  {startColor()}
+                  <Animated.View style={[styles.chooseBlueColor,{opacity:animBlue, top:animBlueY, left:animBlueX}]}>
+                    <IconButton icon="circle" color={colors.blue} onPress={()=>{returnColorBlue()}} />
+                  </Animated.View>      
+                  <Animated.View style={[styles.chooseRedColor,{opacity:animRed, top:animRedY, left:animRedX}]}>
+                    <IconButton icon="circle" color={colors.red} onPress={()=>{returnColorRed()}} />
+                  </Animated.View>      
+                  <Animated.View style={[styles.chooseGreenColor,{opacity:animGreen, top:animGreenY, left:animGreenX}]}>
+                    <IconButton icon="circle" color={colors.green} onPress={()=>{returnColorGreen()}} />
+                  </Animated.View>      
+                  <Animated.View style={[styles.chooseGrayColor,{opacity:animGray, top:animGrayY, left:animGrayX}]}>
+                    <IconButton icon="circle" color={colors.gray} onPress={()=>{returnColorGray()}} />
+                  </Animated.View>
+                </View>
+              :<View/>}
+            <IconButton style={styles.gender} icon="circle" color={props.color?props.color:'#e6e6e6'} 
+            onPress={active?_openColorSelector:false} />
+            <TextInput editable={active} style={styles.primary}
+              onChangeText={text=>setPrimary(text)}>{props.primary}</TextInput>
+            <TextInput editable={active} style={styles.secondary}
+              onChangeText={text=>setSecondary(text)}>{props.secondary}</TextInput>
+            <TextInput editable={active} style={styles.topLeft}
+              onChangeText={text=>setTopLeft(text)}>{props.topLeft}</TextInput>
+            <TextInput editable={active} style={styles.bottomLeft}
+              onChangeText={text=>setBottomLeft(text)}>{props.bottomLeft}</TextInput>
+            <TextInput editable={active} style={styles.topRight}
+              onChangeText={text=>setTopRight(text)}>{props.topRight}</TextInput>
+            <TextInput editable={active} style={styles.plural}
+              onChangeText={text=>setMsecondary(text)}>{props.mSecondary}</TextInput>
+            <TextInput editable={active} style={styles.middle}
+              onChangeText={text=>setMiddle(text)}>{props.middle}</TextInput>
+            <TextInput editable={active} style={styles.bottomRight}
+              onChangeText={text=>setBottomRight(text)}>{props.bottomRight}</TextInput>
+            <Appbar.Action style={styles.modify} color='#00dac4' icon={active?"content-save-outline":"square-edit-outline"} 
+            onPress={()=>{
+              setOpenColor(false)
+              changeWord(props._id)(active)(word)(primary)(secondary)(topLeft)(bottomLeft)(topRight)(mSecondary)(middle)(bottomRight)(color)
+              _changeState()
+            }} />
+            {active?<Appbar.Action style={styles.delete} color='#00dac4' icon="delete" 
+            onPress={()=>{
+              deleteWord(props._id)
+              _changeState()
+              }} />:<View/>}
+        </View>
+      </TouchableHighlight>
+      <TranslationDialog
+        positive={showTranslation}
+        negative={hideShowTranslation}
+        translation={props.translation}
+      />
     </View>
   )
 }
+
+const TranslationDialog = props =>(
+    <Dialog visible={props.positive} onDismiss={props.negative} style={styles.translationDialog}>
+      <Dialog.Content>
+        <Text>{props.translation}</Text>
+      </Dialog.Content>
+    </Dialog>
+  )
 
 const styles = StyleSheet.create({
     mainContainer:{
@@ -583,6 +601,9 @@ const styles = StyleSheet.create({
       isEmptyText:{
         fontSize:20
       },
+      translationDialog:{
+        top:-200
+      }
   });
 
 export default Main;
