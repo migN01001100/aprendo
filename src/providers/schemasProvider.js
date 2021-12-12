@@ -19,7 +19,7 @@ const SchemaProvider = ({children}) =>{
  
     const realmRef = React.useRef(null)
 
-    React.useLayoutEffect(()=>{
+    React.useEffect(()=>{
         const openRealmBehaviourConfig = {
             type: "openImmediately"
         }
@@ -67,6 +67,7 @@ const SchemaProvider = ({children}) =>{
                 setWordsSaved(syncSchemas.length)
                 setWordsLearnt((filterObjects("learnt",syncSchemas).length*100/syncSchemas.length).toFixed(2))
                 setIsNotStudyNorLearnt(getAutoComplete(syncSchemas))
+                console.log("something changed")
             })
         })
         return ()=>{
