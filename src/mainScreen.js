@@ -180,8 +180,11 @@ const animGreen = React.useRef(new Animated.Value(0)).current
 const animGrayY = React.useRef(new Animated.Value(70)).current
 const animGrayX = React.useRef(new Animated.Value(100)).current
 const animGray = React.useRef(new Animated.Value(0)).current
+let animStatus = false
+let staticColor = true
 
 const startColor = () =>{
+  staticColor = false
   Animated.stagger(500,[
     Animated.timing(animBlueX,{ // Blue
       toValue:55,
@@ -242,156 +245,163 @@ const startColor = () =>{
       toValue:1,
       duration:700,
       useNativeDriver:false
-    }).start()
+    }).start(()=>{animStatus = false})
   ])
 }
-const returnColorBlue = () =>{
-  Animated.sequence([
-    Animated.timing(animBlueY,{ //Blue
-      toValue:69.8,
-      duration:500,
-      useNativeDriver:false
-    }).start(),
-    Animated.timing(animBlueX,{
-      toValue:100,
-      duration:500,
-      useNativeDriver:false
-    }).start(),
-    Animated.timing(animBlue,{
-      toValue:1,
-      duration:500,
-      useNativeDriver:false
-    }).start(()=>color = colors.blue),
-    Animated.timing(animRed,{  //Red
-      toValue:0,
-      delay:600,
-      duration:500,
-      useNativeDriver:false
-    }).start(),
-    Animated.timing(animGreen,{ //Green
-      toValue:0,
-      delay:1200,
-      duration:500,
-      useNativeDriver:false
-    }).start(),
-    Animated.timing(animGray,{ //Gray
-      toValue:0,
-      delay:1800,
-      duration:500,
-      useNativeDriver:false
-    }).start()
-  ])
-}
-const returnColorRed = () =>{
-  Animated.sequence([
-    Animated.timing(animRedY,{ //Red
-      toValue:69.8,
-      duration:500,
-      useNativeDriver:false
-    }).start(),
-    Animated.timing(animRedX,{
-      toValue:100,
-      duration:500,
-      useNativeDriver:false
-    }).start(),
-    Animated.timing(animRed,{
-      toValue:1,
-      duration:500,
-      useNativeDriver:false
-    }).start(()=>color = colors.red),
-    Animated.timing(animBlue,{  //Blue
-      toValue:0,
-      delay:600,
-      duration:500,
-      useNativeDriver:false
-    }).start(),
-    Animated.timing(animGreen,{ //Green
-      toValue:0,
-      delay:1200,
-      duration:500,
-      useNativeDriver:false
-    }).start(),
-    Animated.timing(animGray,{ //Gray
-      toValue:0,
-      delay:1800,
-      duration:500,
-      useNativeDriver:false
-    }).start()
-  ])
-}
-const returnColorGreen = () =>{
-  Animated.sequence([
-    Animated.timing(animGreenY,{ //Green
-      toValue:69.8,
-      duration:500,
-      useNativeDriver:false
-    }).start(),
-    Animated.timing(animGreenX,{
-      toValue:100,
-      duration:500,
-      useNativeDriver:false
-    }).start(),
-    Animated.timing(animGreen,{
-      toValue:1,
-      duration:500,
-      useNativeDriver:false
-    }).start(()=>color = colors.green),
-    Animated.timing(animGray,{  //Gray
-      toValue:0,
-      delay:600,
-      duration:500,
-      useNativeDriver:false
-    }).start(),
-    Animated.timing(animRed,{ //Red
-      toValue:0,
-      delay:1200,
-      duration:500,
-      useNativeDriver:false
-    }).start(),
-    Animated.timing(animBlue,{ //Blue
-      toValue:0,
-      delay:1800,
-      duration:500,
-      useNativeDriver:false
-    }).start()
-  ])
-}
-const returnColorGray = () =>{
-  Animated.sequence([
-    Animated.timing(animGrayY,{ //Gray
-      toValue:69.8,
-      duration:500,
-      useNativeDriver:false
-    }).start(),
-    Animated.timing(animGrayX,{
-      toValue:100,
-      duration:500,
-      useNativeDriver:false
-    }).start(),
-    Animated.timing(animGray,{
-      toValue:1,
-      duration:500,
-      useNativeDriver:false
-    }).start(()=>color = colors.gray),
-    Animated.timing(animGreen,{ //Green
-      toValue:0,
-      delay:600,
-      duration:500,
-      useNativeDriver:false
-    }).start(),
-    Animated.timing(animRed,{ //Red
-      toValue:0,
-      delay:1200,
-      duration:500,
-      useNativeDriver:false
-    }).start(),
-    Animated.timing(animBlue,{ //Blue
-      toValue:0,
-      delay:1800,
-      duration:500,
-      useNativeDriver:false
-    }).start()
-  ])
+const returnColor = value =>{
+  switch(value){
+    case "blue":
+      Animated.sequence([
+        Animated.timing(animBlueY,{ //Blue
+          toValue:69.8,
+          duration:500,
+          useNativeDriver:false
+        }).start(),
+        Animated.timing(animBlueX,{
+          toValue:100,
+          duration:500,
+          useNativeDriver:false
+        }).start(),
+        Animated.timing(animBlue,{
+          toValue:1,
+          duration:500,
+          useNativeDriver:false
+        }).start(()=>color = colors.blue),
+        Animated.timing(animRed,{  //Red
+          toValue:0,
+          delay:600,
+          duration:500,
+          useNativeDriver:false
+        }).start(),
+        Animated.timing(animGreen,{ //Green
+          toValue:0,
+          delay:1200,
+          duration:500,
+          useNativeDriver:false
+        }).start(),
+        Animated.timing(animGray,{ //Gray
+          toValue:0,
+          delay:1800,
+          duration:500,
+          useNativeDriver:false
+        }).start(()=>animStatus = true)
+      ])
+      break;
+    case "red":
+      Animated.sequence([
+        Animated.timing(animRedY,{ //Red
+          toValue:69.8,
+          duration:500,
+          useNativeDriver:false
+        }).start(),
+        Animated.timing(animRedX,{
+          toValue:100,
+          duration:500,
+          useNativeDriver:false
+        }).start(),
+        Animated.timing(animRed,{
+          toValue:1,
+          duration:500,
+          useNativeDriver:false
+        }).start(()=>color = colors.red),
+        Animated.timing(animBlue,{  //Blue
+          toValue:0,
+          delay:600,
+          duration:500,
+          useNativeDriver:false
+        }).start(),
+        Animated.timing(animGreen,{ //Green
+          toValue:0,
+          delay:1200,
+          duration:500,
+          useNativeDriver:false
+        }).start(),
+        Animated.timing(animGray,{ //Gray
+          toValue:0,
+          delay:1800,
+          duration:500,
+          useNativeDriver:false
+        }).start(()=>animStatus = true)
+      ])
+      break;
+    case "green":
+      Animated.sequence([
+        Animated.timing(animGreenY,{ //Green
+          toValue:69.8,
+          duration:500,
+          useNativeDriver:false
+        }).start(),
+        Animated.timing(animGreenX,{
+          toValue:100,
+          duration:500,
+          useNativeDriver:false
+        }).start(),
+        Animated.timing(animGreen,{
+          toValue:1,
+          duration:500,
+          useNativeDriver:false
+        }).start(()=>color = colors.green),
+        Animated.timing(animGray,{  //Gray
+          toValue:0,
+          delay:600,
+          duration:500,
+          useNativeDriver:false
+        }).start(),
+        Animated.timing(animRed,{ //Red
+          toValue:0,
+          delay:1200,
+          duration:500,
+          useNativeDriver:false
+        }).start(),
+        Animated.timing(animBlue,{ //Blue
+          toValue:0,
+          delay:1800,
+          duration:500,
+          useNativeDriver:false
+        }).start(()=>animStatus = true)
+      ])
+      break;
+    case "gray":
+      Animated.sequence([
+        Animated.timing(animGrayY,{ //Gray
+          toValue:69.8,
+          duration:500,
+          useNativeDriver:false
+        }).start(),
+        Animated.timing(animGrayX,{
+          toValue:100,
+          duration:500,
+          useNativeDriver:false
+        }).start(),
+        Animated.timing(animGray,{
+          toValue:1,
+          duration:500,
+          useNativeDriver:false
+        }).start(()=>color = colors.gray),
+        Animated.timing(animGreen,{ //Green
+          toValue:0,
+          delay:600,
+          duration:500,
+          useNativeDriver:false
+        }).start(),
+        Animated.timing(animRed,{ //Red
+          toValue:0,
+          delay:1200,
+          duration:500,
+          useNativeDriver:false
+        }).start(),
+        Animated.timing(animBlue,{ //Blue
+          toValue:0,
+          delay:1800,
+          duration:500,
+          useNativeDriver:false
+        }).start(()=>animStatus = true)
+      ])
+      break;
+    default:
+      return
+  }
+  
 }
   return(
     <View style={styles.container} key={props._id}>
@@ -403,21 +413,41 @@ const returnColorGray = () =>{
                 <View style={styles.colorContainer}>
                   {startColor()}
                   <Animated.View style={[styles.chooseBlueColor,{opacity:animBlue, top:animBlueY, left:animBlueX}]}>
-                    <IconButton icon="circle" color={colors.blue} onPress={()=>{returnColorBlue()}} />
+                    <IconButton icon="circle" color={colors.blue} onPress={()=>{
+                      if(animStatus){
+                        startColor()
+                        return
+                      }
+                      returnColor('blue')}} />
                   </Animated.View>      
                   <Animated.View style={[styles.chooseRedColor,{opacity:animRed, top:animRedY, left:animRedX}]}>
-                    <IconButton icon="circle" color={colors.red} onPress={()=>{returnColorRed()}} />
+                    <IconButton icon="circle" color={colors.red} onPress={()=>{
+                      if(animStatus){
+                        startColor()
+                        return
+                      }
+                      returnColor('red')}} />
                   </Animated.View>      
                   <Animated.View style={[styles.chooseGreenColor,{opacity:animGreen, top:animGreenY, left:animGreenX}]}>
-                    <IconButton icon="circle" color={colors.green} onPress={()=>{returnColorGreen()}} />
+                    <IconButton icon="circle" color={colors.green} onPress={()=>{
+                      if(animStatus){
+                        startColor()
+                        return
+                      }
+                      returnColor('green')}} />
                   </Animated.View>      
                   <Animated.View style={[styles.chooseGrayColor,{opacity:animGray, top:animGrayY, left:animGrayX}]}>
-                    <IconButton icon="circle" color={colors.gray} onPress={()=>{returnColorGray()}} />
+                    <IconButton icon="circle" color={colors.gray} onPress={()=>{
+                      if(animStatus){
+                        startColor()
+                        return
+                      }
+                      returnColor('gray')}} />
                   </Animated.View>
                 </View>
               :<View/>}
-            <IconButton style={styles.gender} icon="circle" color={props.color?props.color:'#e6e6e6'} 
-            onPress={active?_openColorSelector:false} />
+            {staticColor?<IconButton style={styles.gender} icon="circle" color={props.color?props.color:'#e6e6e6'} 
+            onPress={active?_openColorSelector:false} />:<View/>}
             <TextInput editable={active} style={styles.primary}
               onChangeText={text=>setPrimary(text)}>{props.primary}</TextInput>
             <TextInput editable={active} style={styles.secondary}
