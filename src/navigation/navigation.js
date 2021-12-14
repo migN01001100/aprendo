@@ -34,7 +34,7 @@ export const NavigationScreen = () =>{
       else{
         setSwitchTheme(combinedDefaultTheme)
       }
-    })
+    },[theme])
     
     return (
         <PaperProvider theme={switchTheme}>

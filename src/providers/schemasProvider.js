@@ -200,7 +200,7 @@ const SchemaProvider = ({children}) =>{
         })
     }
 
-    const changeWord = id => active => word => primary => secondary => topLeft => bottomLeft => topRight => mSecondary => middle => bottomRight => color =>{
+    const changeWord = id => category => active => word => primary => secondary => topLeft => bottomLeft => topRight => mSecondary => middle => bottomRight => color =>{
         const realm = realmRef.current 
         if(!active){
           return 
@@ -211,6 +211,7 @@ const SchemaProvider = ({children}) =>{
             const itemIndex = realm.objects(schemaConfig.db)[_item] // select object via index
             
             itemIndex.word = word
+            itemIndex.category = category
             itemIndex.primary = primary
             itemIndex.color= color
             itemIndex.secondary = secondary
