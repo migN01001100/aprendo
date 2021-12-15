@@ -13,7 +13,7 @@ let color = '' //save color for DB
 let flag = false
 let copyCat = []
 export const WordScreen = ({navigation}) => {
-    const {schemas, addWord, isNotStudyNorLearnt} = useSchemas()
+    const {schemas, addWord, isNotStudyNorLearnt, schemaConfig} = useSchemas()
     const [main, setMain] = React.useState('')
     const [category, setCategory] = React.useState('')
     
@@ -278,7 +278,7 @@ export const WordScreen = ({navigation}) => {
                             if (main == "" || handleErrorMain(main)){
                                 setWarn(true)
                             }else{
-                            addWord(main)(chip.length == 0?["all"]:chip)(color)(translation)(primary)(secondary)(middle)(mSecondary)(topLeft)(topRight)(bottomLeft)(bottomRight)
+                            addWord(schemaConfig.db)(main)(chip.length == 0?["all"]:chip)(color)(translation)(primary)(secondary)(middle)(mSecondary)(topLeft)(topRight)(bottomLeft)(bottomRight)
                             navigation.navigate('Home')
                             setQuery(isNotStudyNorLearnt)
                             setMain("")

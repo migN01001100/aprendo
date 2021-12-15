@@ -27,11 +27,11 @@ const Main = ({navigation}) => {
 
   const _calculateRef = (tag) =>{
     if(pointerA<pointerB){
-      modifyCategory(tag, pointerB, schemas)
+      modifyCategory(schemaConfig.db,tag, pointerB, schemas)
     }else if(pointerA === undefined){  // when is not defined yet 
-       modifyCategory(tag, 0, schemas)
+       modifyCategory(schemaConfig.db,tag, 0, schemas)
     }else{
-      modifyCategory(tag, pointerB, schemas)   
+      modifyCategory(schemaConfig.db,tag, pointerB, schemas)   
     }
   }
 
@@ -126,7 +126,8 @@ const DataCards = ({item}) => (
 )
 
 const Cards = props =>{
-  const { changeWord, deleteWord} = useSchemas()
+
+  const { schemaConfig, changeWord, deleteWord, modifyTranslation} = useSchemas()
   const [active, setActive] = React.useState(false)
 
   const [word, setWord] = React.useState(props.word)
@@ -138,47 +139,46 @@ const Cards = props =>{
   const [mSecondary, setMsecondary] = React.useState(props.mSecondary)
   const [middle, setMiddle] = React.useState(props.middle)
   const [bottomRight, setBottomRight] = React.useState(props.bottomRight)
-  let color = props.color  
+  const [staticColor, setStaticColor] = React.useState(true)
+  const [addTranslationIco, setAddTranslationIco] = React.useState(true)
+  const [newTranslate, setNewTranslate] = React.useState(props.translation)
 
-  const [openColor, setOpenColor] = React.useState(false)
+  let color = props.color
 
   const _changeState = ()=>{
     if(!active){
       setActive(true)
-    }else{
-      setActive(false)
+      return
     }
+    setActive(false)
   }
-  const _openColorSelector = ()=>{
-      if(openColor){
-        return
-      }else{
-        setOpenColor(true)
-      }
-  }
- ///ColorSelector
- const colors ={
+
+///ColorSelector
+const colors ={
   blue:'#0066ff',
   red:'#ff0000',
   green:'#33cc33',
   gray:'#e6e6e6'
 }
 // BlueStart
-const animBlueY = React.useRef(new Animated.Value(70)).current
-const animBlueX = React.useRef(new Animated.Value(100)).current
+const animBlueY = React.useRef(new Animated.Value(313)).current
+const animBlueX = React.useRef(new Animated.Value(140)).current
 const animBlue = React.useRef(new Animated.Value(0)).current
 // RedStart
-const animRedY = React.useRef(new Animated.Value(70)).current
-const animRedX = React.useRef(new Animated.Value(100)).current
+const animRedY = React.useRef(new Animated.Value(313)).current
+const animRedX = React.useRef(new Animated.Value(140)).current
 const animRed = React.useRef(new Animated.Value(0)).current
 // GreenStart
-const animGreenY = React.useRef(new Animated.Value(70)).current
-const animGreenX = React.useRef(new Animated.Value(100)).current
+const animGreenY = React.useRef(new Animated.Value(313)).current
+const animGreenX = React.useRef(new Animated.Value(140)).current
 const animGreen = React.useRef(new Animated.Value(0)).current
 // GrayStart
-const animGrayY = React.useRef(new Animated.Value(70)).current
-const animGrayX = React.useRef(new Animated.Value(100)).current
+const animGrayY = React.useRef(new Animated.Value(313)).current
+const animGrayX = React.useRef(new Animated.Value(140)).current
 const animGray = React.useRef(new Animated.Value(0)).current
+
+const animStatus = React.useRef(false)
+
 // =================
 const animDrawerY = React.useRef(new Animated.Value(-150)).current
 const animTextInputCategory = React.useRef(new Animated.Value(0)).current
@@ -190,25 +190,64 @@ const [categories, setCategories] = React.useState(props.categories)
 const [categoryIco, setCategoryIco] = React.useState(true)
 const [newCategory, setNewCategory] = React.useState('')
 
-const animStatus = React.useRef(false)
-let staticColor = true
+// ======================
+const animAddTranslationX = React.useRef(new Animated.Value(-350)).current
 
+let saving = false
+
+const startTranlation = ()=>{
+  Animated.sequence([
+    Animated.timing(animAddTranslationX,{
+      toValue:0,
+      duration:500,
+      useNativeDriver:false
+    }).start()
+  ])
+}
+
+const stopTranslation = ()=>{
+  Animated.sequence([
+    Animated.timing(animAddTranslationX,{
+      toValue:-350,
+      duration:500,
+      useNativeDriver:false
+    }).start(()=>{
+      if(saving){
+        setAddTranslationIco(true)
+        modifyTranslation(schemaConfig.db, props._id, newTranslate)
+        setNewTranslate('')
+        saving = false
+      }
+    })
+  ])
+}
+const startTranslationEdge = ()=>{
+  Animated.sequence([
+    Animated.timing(animAddTranslationX,{
+      toValue:-250,
+      duration:500,
+      useNativeDriver:false
+    }).start()
+  ])
+}
+
+// ======================
 const startColor = () =>{
+  setStaticColor(false)
   const settings = {
     delay:{
       first: 150,
       second: 210,
     }
   }
-  staticColor = false
-  Animated.stagger(500,[
+  Animated.sequence([
     Animated.timing(animBlueX,{ // Blue
-      toValue:55,
+      toValue:180,
       duration:settings.delay.first,
       useNativeDriver:false
     }).start(),
     Animated.timing(animBlueY,{
-      toValue:55,
+      toValue:215,
       duration:settings.delay.first,
       useNativeDriver:false
     }).start(),
@@ -218,12 +257,12 @@ const startColor = () =>{
       useNativeDriver:false
     }).start(),
     Animated.timing(animRedX,{ // Red
-      toValue:80,
+      toValue:250,
       duration:settings.delay.first,
       useNativeDriver:false
     }).start(),
     Animated.timing(animRedY,{
-      toValue:30,
+      toValue:215,
       duration:settings.delay.first,
       useNativeDriver:false
     }).start(),
@@ -233,12 +272,12 @@ const startColor = () =>{
       useNativeDriver:false
     }).start(),
     Animated.timing(animGreenX,{ //Green
-      toValue:120,
+      toValue:320,
       duration:settings.delay.first,
       useNativeDriver:false
     }).start(),
     Animated.timing(animGreenY,{
-      toValue:30,
+      toValue:235,
       duration:settings.delay.first,
       useNativeDriver:false
     }).start(),
@@ -248,12 +287,12 @@ const startColor = () =>{
       useNativeDriver:false
     }).start(),
     Animated.timing(animGrayX,{ //Gray
-      toValue:145,
+      toValue:360,
       duration:settings.delay.first,
       useNativeDriver:false
     }).start(),
     Animated.timing(animGrayY,{
-      toValue:55,
+      toValue:295,
       duration:settings.delay.first,
       useNativeDriver:false
     }).start(),
@@ -278,12 +317,12 @@ const returnColor = value =>{
     case "blue":
       Animated.sequence([
         Animated.timing(animBlueY,{ //Blue
-          toValue:69.8,
+          toValue:313,
           duration:200,
           useNativeDriver:false
         }).start(),
         Animated.timing(animBlueX,{
-          toValue:100,
+          toValue:140,
           duration:200,
           useNativeDriver:false
         }).start(),
@@ -317,12 +356,12 @@ const returnColor = value =>{
     case "red":
       Animated.sequence([
         Animated.timing(animRedY,{ //Red
-          toValue:69.8,
+          toValue:313,
           duration:200,
           useNativeDriver:false
         }).start(),
         Animated.timing(animRedX,{
-          toValue:100,
+          toValue:140,
           duration:200,
           useNativeDriver:false
         }).start(),
@@ -356,12 +395,12 @@ const returnColor = value =>{
     case "green":
       Animated.sequence([
         Animated.timing(animGreenY,{ //Green
-          toValue:69.8,
+          toValue:313,
           duration:200,
           useNativeDriver:false
         }).start(),
         Animated.timing(animGreenX,{
-          toValue:100,
+          toValue:140,
           duration:200,
           useNativeDriver:false
         }).start(),
@@ -395,12 +434,12 @@ const returnColor = value =>{
     case "gray":
       Animated.sequence([
         Animated.timing(animGrayY,{ //Gray
-          toValue:69.8,
+          toValue:313,
           duration:200,
           useNativeDriver:false
         }).start(),
         Animated.timing(animGrayX,{
-          toValue:100,
+          toValue:140,
           duration:200,
           useNativeDriver:false
         }).start(),
@@ -436,6 +475,7 @@ const returnColor = value =>{
   }
   
 }
+
 const openDrawer = ()=>{
   Animated.sequence([
     Animated.timing(animDrawerY,{
@@ -502,11 +542,31 @@ const closeTranslation = ()=>{
   ])
 }
 
-const openAndCloseTranslation = ()=>{
-  openTranslation()
-  setTimeout(()=>closeTranslation(),2000)
-}
+let buildShowTranslate 
+let destroyShowTranslate 
+let buildEdgeTranslate 
+let destroyEdgeTranslate 
 
+const openAndCloseTranslation = ()=>{
+  buildShowTranslate = setTimeout(()=>openTranslation(),0)
+  destroyShowTranslate = setTimeout(()=>closeTranslation(),2000)
+  if(props.translation === ''){
+    buildEdgeTranslate = setTimeout(()=>startTranslationEdge(),2100)
+    destroyEdgeTranslate = setTimeout(()=>stopTranslation(),10000)    
+  }else{
+    buildEdgeTranslate = setTimeout(()=>startTranslationEdge(),2100)
+    destroyEdgeTranslate = setTimeout(()=>stopTranslation(),3900) 
+  }
+}
+const switchColors = (check, value1, value2, color)=>{
+  if(value1 && value2){
+    if(check){
+      startColor()
+    }
+    return
+  }
+  returnColor(color) 
+}
   return(
     <View key={props._id} style={styles.containerCarousel}>
       {active?
@@ -522,58 +582,43 @@ const openAndCloseTranslation = ()=>{
         }}/>
       </View>
       :
-      <View/>} 
+      <View/>}
+      {active?
+        <Animated.View style={[styles.chooseBlueColor,{opacity:animBlue, top:animBlueY, left:animBlueX}]}>
+          <IconButton icon="circle" color={colors.blue} size={35} 
+            onPress={()=>{switchColors(true,animStatus.current,active,'blue')}} />
+        </Animated.View>      
+        :<View/>}
+      {active?
+        <Animated.View style={[styles.chooseRedColor,{opacity:animRed, top:animRedY, left:animRedX}]}>
+          <IconButton icon="circle" color={colors.red} size={35} 
+            onPress={()=>{switchColors(true,animStatus.current,active,'red')}} />
+        </Animated.View>      
+        :<View/>}
+      {active?
+        <Animated.View style={[styles.chooseGreenColor,{opacity:animGreen, top:animGreenY, left:animGreenX}]}>
+          <IconButton icon="circle" color={colors.green} size={35} 
+             onPress={()=>{switchColors(true,animStatus.current,active,'green')}} />
+        </Animated.View>      
+        :<View/>}
+      {active?
+        <Animated.View style={[styles.chooseGrayColor,{opacity:animGray, top:animGrayY, left:animGrayX}]}>
+          <IconButton icon="circle" color={colors.gray} size={35} 
+            onPress={()=>{switchColors(true,animStatus.current,active,'gray')}} />
+        </Animated.View>   
+        :<View/>}
       <TouchableHighlight 
         onLongPress={()=>openAndCloseTranslation()} 
         underlayColor="#cccccc" 
         style={styles.card}
-      >
+        disabled={active}>
         <View style={styles.card}>
             <TextInput editable={active} style={styles.word}
               onChangeText={text=>setWord(text)}>{props.word}</TextInput>
-              {openColor?
-                <View style={styles.colorContainer}>
-                  {startColor()}
-                  <Animated.View style={[styles.chooseBlueColor,{opacity:animBlue, top:animBlueY, left:animBlueX}]}>
-                    <IconButton icon="circle" color={colors.blue} onPress={()=>{
-                      if(animStatus.current){
-                        startColor()
-                             return
-                      }
-                      returnColor('blue')
-                      }} />
-                  </Animated.View>      
-                  <Animated.View style={[styles.chooseRedColor,{opacity:animRed, top:animRedY, left:animRedX}]}>
-                    <IconButton icon="circle" color={colors.red} onPress={()=>{
-                      if(animStatus.current){
-                        startColor()
-                        return
-                      }
-                      returnColor('red')
-                      }} />
-                  </Animated.View>      
-                  <Animated.View style={[styles.chooseGreenColor,{opacity:animGreen, top:animGreenY, left:animGreenX}]}>
-                    <IconButton icon="circle" color={colors.green} onPress={()=>{
-                      if(animStatus.current){
-                        startColor()
-                        return
-                      }
-                      returnColor('green')
-                      }} />
-                  </Animated.View>      
-                  <Animated.View style={[styles.chooseGrayColor,{opacity:animGray, top:animGrayY, left:animGrayX}]}>
-                    <IconButton icon="circle" color={colors.gray} onPress={()=>{
-                      if(animStatus.current){
-                        startColor()
-                        return
-                      }
-                      returnColor('gray')
-                      }} />
-                  </Animated.View>
-                </View>
-              :<View/>}
-            {staticColor?<IconButton style={styles.gender} icon="circle" color={props.color?props.color:'#e6e6e6'} 
-            onPress={active?_openColorSelector:false} />:<View/>}
+            {staticColor?
+            <IconButton style={styles.gender} icon="circle" size={35} color={props.color?props.color:'#e6e6e6'} 
+            onPress={active?()=>startColor():null} />
+            :<View/>}
             <TextInput editable={active} style={styles.primary}
               onChangeText={text=>setPrimary(text)}>{props.primary}</TextInput>
             <TextInput editable={active} style={styles.secondary}
@@ -592,51 +637,88 @@ const openAndCloseTranslation = ()=>{
               onChangeText={text=>setBottomRight(text)}>{props.bottomRight}</TextInput>
             <Appbar.Action style={styles.modify} color='#00dac4' icon={active?"content-save-outline":"square-edit-outline"} 
             onPress={()=>{
-              setOpenColor(false)
-              changeWord(props._id)(categories)(active)(word)(primary)(secondary)(topLeft)(bottomLeft)(topRight)(mSecondary)(middle)(bottomRight)(color)
-              _changeState()              
+              changeWord(schemaConfig.db)(props._id)(categories)(active)(word)(primary)(secondary)(topLeft)(bottomLeft)(topRight)(mSecondary)(middle)(bottomRight)(color)
+              _changeState()
+              setStaticColor(true)
+              setChangeIco(true)
+              switchColors(false,animStatus.current,active,'gray')
             }} />
-            {active?<Appbar.Action style={styles.delete} color='#00dac4' icon="delete" 
+            {active?<IconButton style={styles.delete} color='#00dac4' icon="delete" 
             onPress={()=>{
-              deleteWord(props._id)
+              deleteWord(schemaConfig.db,props._id)
               _changeState()
               }} />:<View/>}
         </View>
       </TouchableHighlight>
+      {active?
+            <View style={styles.close}>
+              <Appbar.Action icon="close" size={40}
+                onPress={()=>{
+                setActive(false)
+                setStaticColor(true)
+                setChangeIco(true)
+                switchColors(false,animStatus.current,active,'gray')
+            }} /></View>
+            :
+            <View/>}
       <Animated.View style={[styles.translationDialog,{right:animTranslationX}]}>
-            <Title>{props.translation}</Title>
+            <Title>{props.translation?props.translation:"there's not translation yet"}</Title>
       </Animated.View>
-      <Animated.View style={[styles.drawerContainer,{bottom:animDrawerY}]}>
-      <View style={styles.drawerBox}>
-        <Appbar.Action style={styles.addNewCategoryIco} 
-          icon={categoryIco?"plus":"minus"} 
-          size={30} onPress={()=>{
-          if(categoryIco){
-            setCategoryIco(false)
-            openTextInput()
-            return
-          }
-          setCategoryIco(true)
-          closeTextInput()
-        }} />
-        <Animated.View style={[styles.textInputCategory,{width:animTextInputCategory, opacity:animTextInputCategoryOpacity}]}>
-            <TextInputPaper label='New category' mode='outlined' value={newCategory} 
-            onChangeText={word=>setNewCategory(word)} 
-            onSubmitEditing={()=>{
-              setCategories([...categories, newCategory])
-              setNewCategory('')
-              }}/>
-        </Animated.View>
-        <ScrollView style={styles.chipCategory} horizontal={true} showsHorizontalScrollIndicator={false}>
-            {categories.map(item=>(
-              <Chip 
-              key={item + "_" + Math.random().toString().substr(2,9)}
-              onPress={()=>{setCategories(filterCategories(item,categories))}}
-              >{item}</Chip>
-            ))}
-        </ScrollView>
-      </View>
-    </Animated.View>
+      <Animated.View style={[styles.addTranslation,{right:animAddTranslationX}]}>
+            <Appbar.Action style={styles.translationIco} icon={addTranslationIco?'plus':'minus'} size={37} 
+              onPress={()=>{
+                clearTimeout(destroyEdgeTranslate)
+                if(addTranslationIco){
+                  startTranlation()
+                  setAddTranslationIco(false)
+                  return
+                }
+                setAddTranslationIco(true)
+                stopTranslation()
+              }}
+              />
+              <Animated.View style={styles.translationInput} >
+                <TextInputPaper style={styles.translationInputPaper} label='New Translation' mode='outlined'
+                  value={newTranslate}
+                  onChangeText={word=>setNewTranslate(word)}
+                  onSubmitEditing={()=>{
+                    saving = true
+                    stopTranslation()
+                  }}
+                />
+              </Animated.View>
+      </Animated.View>
+      {active?<Animated.View style={[styles.drawerContainer,{bottom:animDrawerY}]}>
+        <View style={styles.drawerBox}>
+          <Appbar.Action style={styles.addNewCategoryIco} 
+            icon={categoryIco?"plus":"minus"} 
+            size={30} onPress={()=>{
+            if(categoryIco){
+              setCategoryIco(false)
+              openTextInput()
+              return
+            }
+            setCategoryIco(true)
+            closeTextInput()
+          }} />
+          <Animated.View style={[styles.textInputCategory,{width:animTextInputCategory, opacity:animTextInputCategoryOpacity}]}>
+              <TextInputPaper label='New category' mode='outlined' value={newCategory} 
+              onChangeText={word=>setNewCategory(word)} 
+              onSubmitEditing={()=>{
+                setCategories([...categories, newCategory])
+                setNewCategory('')
+                }}/>
+          </Animated.View>
+          <ScrollView style={styles.chipCategory} horizontal={true} showsHorizontalScrollIndicator={false}>
+              {categories.map(item=>(
+                <Chip 
+                key={item + "_" + Math.random().toString().substr(2,9)}
+                onPress={()=>{setCategories(filterCategories(item,categories))}}
+                >{item}</Chip>
+              ))}
+          </ScrollView>
+        </View>
+      </Animated.View>:<View/>}
     </View>  
   )
 }
@@ -685,9 +767,11 @@ const styles = StyleSheet.create({
         color:'#000000'
       },
       gender:{
+        zIndex:1,
+        flex:1,
         position:'absolute',
-        left:100,
-        top: 70
+        left:98.7,
+        top: 65
       },
       primary:{
         position:'absolute',
@@ -758,24 +842,35 @@ const styles = StyleSheet.create({
         bottom:0,
         left:0
       },
-      colorContainer:{
-        flex: 1
+      close:{
+        justifyContent:'center',
+        alignItems:'center',
+        backgroundColor:'#fffff5',
+        bottom:20,
+        width:40,
+        height:40,
+        borderRadius:50,
+        elevation: 2
       },
       chooseBlueColor:{
         position:'absolute',
-        zIndex:1
+        zIndex:1,
+        elevation: 2,
       },
       chooseRedColor:{
         position:'absolute',
-        zIndex:1
+        zIndex:1,
+        elevation: 2
       },
       chooseGreenColor:{
         position:'absolute',
-        zIndex:1
+        zIndex:1,
+        elevation: 2
       },
       chooseGrayColor:{
         position:'absolute',
-        zIndex:1
+        zIndex:1,
+        elevation: 2
       },
       restartFAB:{
         position:'absolute',
@@ -802,6 +897,30 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius:25,
         backgroundColor:'#fffff5',
         elevation:2
+      },
+      addTranslation:{
+        position:'absolute',
+        top:43,
+        width:300,
+        height:55,
+        borderTopLeftRadius:25,
+        borderBottomLeftRadius:25,
+        backgroundColor:'#fffff5',
+        elevation:2
+      },
+      translationIco:{
+        position:'relative',
+        bottom:7,
+        right:8
+      },  
+      translationInput:{
+        position:'absolute',
+        marginLeft:60,
+        width:238,
+        height:55,
+      },
+      translationInputPaper:{
+        height:45,
       },
       categories:{
         zIndex:1,

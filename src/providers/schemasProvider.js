@@ -176,12 +176,11 @@ const SchemaProvider = ({children}) =>{
         return selectedObjects
     }
     //Lernt and Studying section_________________________end
-    const addWord = word => category => color => translation => primary => secondary => middle => mSecondary => topLeft => topRight => bottomLeft => bottomRight => {
+    const addWord = db => word => category => color => translation => primary => secondary => middle => mSecondary => topLeft => topRight => bottomLeft => bottomRight => {
         let random = Math.random().toString(9).substr(2,5);
         const realm = realmRef.current
-        const config = realm.objects("Config")[0]
         realm.write(()=>{
-            realm.create(config.db,{
+            realm.create(db,{
                 _id: parseInt(random),
                 word,
                 category,
@@ -199,15 +198,25 @@ const SchemaProvider = ({children}) =>{
         })
     }
 
-    const changeWord = id => category => active => word => primary => secondary => topLeft => bottomLeft => topRight => mSecondary => middle => bottomRight => color =>{
+    const modifyTranslation = (db, id, translation)=>{
+        const realm = realmRef.current
+        const _index = realmForIndex(db,id)
+        realm.write(()=>{
+            const itemIndex = realm.objects(db)[_index]
+
+            itemIndex.translation = translation
+        })
+    }
+
+    const changeWord = db => id => category => active => word => primary => secondary => topLeft => bottomLeft => topRight => mSecondary => middle => bottomRight => color =>{
         const realm = realmRef.current 
         if(!active){
           return 
         }else{
-          const _item = realmForIndex(schemaConfig.db,id) //search index of object to modify
+          const _item = realmForIndex(db,id) //search index of object to modify
           
           realm.write(()=>{
-            const itemIndex = realm.objects(schemaConfig.db)[_item] // select object via index
+            const itemIndex = realm.objects(db)[_item] // select object via index
             
             itemIndex.word = word
             itemIndex.category = category
@@ -224,9 +233,9 @@ const SchemaProvider = ({children}) =>{
         }
       }
 
-    const deleteWord = id => {
+    const deleteWord = (db, id) => {
         const realm = realmRef.current
-        const _item = realm.objectForPrimaryKey(schemaConfig.db, id)
+        const _item = realm.objectForPrimaryKey(db, id)
       
         realm.write(()=>{
           realm.delete(_item)
@@ -241,11 +250,11 @@ const SchemaProvider = ({children}) =>{
         })
     }
 
-    const modifyCategory = (tag, pointer, currentWords)=>{
+    const modifyCategory = (db, tag, pointer, currentWords)=>{
         const realm = realmRef.current
         const wordPosition = currentWords[pointer]
-        const equivalentIndex = realmForIndex(schemaConfig.db, wordPosition._id)
-        const itemObject = realmSelect(schemaConfig.db,equivalentIndex)
+        const equivalentIndex = realmForIndex(db, wordPosition._id)
+        const itemObject = realmSelect(db,equivalentIndex)
         const itemCategorie = itemObject.category
         let bool = false
         itemCategorie.map(item=>{
@@ -293,6 +302,7 @@ const SchemaProvider = ({children}) =>{
             modifyCategory,
             deleteFromFilter,
             filterChange,
+            modifyTranslation,
             addWord
         }}>
             {children}
