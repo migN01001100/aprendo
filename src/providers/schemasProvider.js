@@ -35,9 +35,8 @@ const SchemaProvider = ({children}) =>{
         
         Realm.open(config).then(realm=>{
             realmRef.current = realm
-            const tempNonSyncShemaConfig = {_id: 0, db: "English", filter: "verb"}
             const syncShemaConfig = realm.objects("Config")[0]
-            const syncConfig = syncShemaConfig || tempNonSyncShemaConfig
+            const syncConfig = syncShemaConfig
 
             const DBschemas = realm.schema
             const langSchemas = DBschemas.map(item=>item.name)

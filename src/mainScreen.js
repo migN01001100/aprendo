@@ -183,7 +183,7 @@ const animGray = React.useRef(new Animated.Value(0)).current
 const animDrawerY = React.useRef(new Animated.Value(-150)).current
 const animTextInputCategory = React.useRef(new Animated.Value(0)).current
 const animTextInputCategoryOpacity = React.useRef(new Animated.Value(0)).current
-const animTranslationX = React.useRef(new Animated.Value(-300)).current
+const animTranslationX = React.useRef(new Animated.Value(-350)).current
 
 const [changeIco, setChangeIco] = React.useState(true)
 const [categories, setCategories] = React.useState(props.categories)
@@ -495,7 +495,7 @@ const openTranslation = ()=>{
 const closeTranslation = ()=>{
   Animated.sequence([
     Animated.timing(animTranslationX,{
-      toValue:-300,
+      toValue:-350,
       duration:500,
       useNativeDriver:false
     }).start()
