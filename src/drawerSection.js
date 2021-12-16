@@ -9,7 +9,7 @@ import {
     Appbar,
     Drawer
 } from 'react-native-paper';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useSchemas } from './providers/schemasProvider';
 import { useAuth } from './providers/authProvider';
 
@@ -27,16 +27,16 @@ export const ItemsDrawer = props => {
             <Caption style={styles.name}>@CustomUser</Caption>
             <Text style={styles.titleName}>Words:</Text>
             <PaperDrawer.Section>
-                <Drawer.Section style={styles.row}>
-                    <Drawer.Section style={styles.section}>
+                <View style={styles.row}>
+                    <View style={styles.section}>
                         <Paragraph style={styles.paragraph}>{wordsLearnt}%</Paragraph>
                         <Caption style={styles.caption}>Learnt</Caption>
-                    </Drawer.Section>
-                    <Drawer.Section style={styles.section}>
+                    </View>
+                    <View style={styles.section}>
                         <Paragraph style={styles.paragraph}>{wordsSaved}</Paragraph>
                         <Caption style={styles.caption}>Saved</Caption>
-                    </Drawer.Section>
-                </Drawer.Section>
+                    </View>
+                </View>
             </PaperDrawer.Section>
             <PaperDrawer.Section style={styles.drawerSection}>
                 <PaperDrawer.Item icon="earth" label="Language" onPress={()=>{props.navigation.navigate('Language')}}/>

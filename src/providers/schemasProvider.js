@@ -16,7 +16,8 @@ const SchemaProvider = ({children}) =>{
     const [schemas, setSchemas] = React.useState([])
     const [schemaConfig, setSchemaConfig] = React.useState({})
     const [isNotStudyNorLearnt, setIsNotStudyNorLearnt] = React.useState([])
- 
+    const [loading, setLoading] = React.useState(true)
+    
     const realmRef = React.useRef(null)
 
     React.useEffect( ()=>{
@@ -43,7 +44,7 @@ const SchemaProvider = ({children}) =>{
             
             setDBNames(filteredLangSchemas)
             const syncSchemas = await realm.objects(syncShemaConfig.db)
-        
+            
             setSchemaConfig(syncShemaConfig)
             setSchemas(isFilter(removeLearntWords(syncSchemas),syncShemaConfig.filter))
             setStudying(filterObjects("studying",removeLearntWords(syncSchemas)))
@@ -53,13 +54,12 @@ const SchemaProvider = ({children}) =>{
             setWordsLearnt((filterObjects("learnt",syncSchemas).length*100/syncSchemas.length).toFixed(2))
             setIsNotStudyNorLearnt(getAutoComplete(syncSchemas))
             
-            syncShemaConfig.addListener(()=>{
+            syncShemaConfig.addListener(async ()=>{
                 const syncShemaConfig =  realm.objects("Config")[0]
                 const syncSchemas =  realm.objects(syncShemaConfig.db)
                 setSchemaConfig(syncShemaConfig)
                 setSchemas(isFilter(removeLearntWords(syncSchemas),syncShemaConfig.filter))
                 setCategories(getCategories(syncSchemas))
-                console.log(getCategories(syncSchemas))
             })
             syncSchemas.addListener(()=>{
                 const syncSchemas = realm.objects(syncShemaConfig.db)
@@ -70,13 +70,13 @@ const SchemaProvider = ({children}) =>{
                 setIsNotStudyNorLearnt(getAutoComplete(syncSchemas))
             })
         })
+            
         return ()=>{
             const realm = realmRef.current
             if(realm){
                 realm.removeAllListeners()
                 realm.close()
                 realmRef.current = null
-                console.log("unmounte DB")
             }
         }
     },[user])
@@ -299,6 +299,7 @@ const SchemaProvider = ({children}) =>{
             wordsSaved,
             wordsLearnt,
             isNotStudyNorLearnt,
+            loading,
             languageChange,
             changeWord,
             deleteWord,

@@ -6,7 +6,7 @@ import {
   import {
     DarkTheme as PaperDarkTheme,
     DefaultTheme as PaperDefaultTheme,
-    Provider as PaperProvider
+    Provider as PaperProvider,
   } from 'react-native-paper'
 import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -35,11 +35,11 @@ export const NavigationScreen = () =>{
         setSwitchTheme(combinedDefaultTheme)
       }
     },[theme])
-    
+
     return (
         <PaperProvider theme={switchTheme}>
-            <NavigationContainer theme={switchTheme}>
-                <Drawer.Navigator 
+          <NavigationContainer theme={switchTheme}>
+              <Drawer.Navigator 
                 initialRouteName="Home" 
                 drawerContent={({navigation})=>
                     <ItemsDrawer 

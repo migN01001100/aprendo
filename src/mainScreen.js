@@ -15,7 +15,6 @@ const Main = ({navigation}) => {
   const [pointerA, setPointerA] = React.useState() //helps to calculate index of item
   const [pointerB, setPointerB] = React.useState() //helps to calculate index of item
   
-  const realmRef = React.useRef(null)
   const screenWidth= Dimensions.get('screen').width
   const onStateChange = ()=>{
     if(stateFab){
@@ -616,7 +615,7 @@ const switchColors = (check, value1, value2, color)=>{
               </Animated.View>   
               :<View/>}
             {staticColor?
-            <IconButton style={styles.gender} icon="circle" size={30} color={props.color?props.color:'#e6e6e6'} 
+            <IconButton style={styles.gender} icon="circle" size={30} color={color?color:'#e6e6e6'} 
             onPress={active?()=>startColor():null} />
             :<View/>}
             <TextInput editable={active} style={styles.primary}

@@ -9,7 +9,7 @@ const AuthProvider = ({children})=>{
     const currentUser = realmApp().currentUser
     const [user, setUser] = React.useState(currentUser)
     const [preset] = React.useState({})
-
+    
     const signIn = async(email, pass)=>{
         try{
             const app = realmApp()
