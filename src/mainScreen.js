@@ -161,20 +161,20 @@ const colors ={
   gray:'#e6e6e6'
 }
 // BlueStart
-const animBlueY = React.useRef(new Animated.Value(313)).current
-const animBlueX = React.useRef(new Animated.Value(140)).current
+const animBlueY = React.useRef(new Animated.Value(65)).current
+const animBlueX = React.useRef(new Animated.Value(100)).current
 const animBlue = React.useRef(new Animated.Value(0)).current
 // RedStart
-const animRedY = React.useRef(new Animated.Value(313)).current
-const animRedX = React.useRef(new Animated.Value(140)).current
+const animRedY = React.useRef(new Animated.Value(65)).current
+const animRedX = React.useRef(new Animated.Value(100)).current
 const animRed = React.useRef(new Animated.Value(0)).current
 // GreenStart
-const animGreenY = React.useRef(new Animated.Value(313)).current
-const animGreenX = React.useRef(new Animated.Value(140)).current
+const animGreenY = React.useRef(new Animated.Value(65)).current
+const animGreenX = React.useRef(new Animated.Value(100)).current
 const animGreen = React.useRef(new Animated.Value(0)).current
 // GrayStart
-const animGrayY = React.useRef(new Animated.Value(313)).current
-const animGrayX = React.useRef(new Animated.Value(140)).current
+const animGrayY = React.useRef(new Animated.Value(65)).current
+const animGrayX = React.useRef(new Animated.Value(100)).current
 const animGray = React.useRef(new Animated.Value(0)).current
 
 const animStatus = React.useRef(false)
@@ -242,12 +242,12 @@ const startColor = () =>{
   }
   Animated.sequence([
     Animated.timing(animBlueX,{ // Blue
-      toValue:180,
+      toValue:150,
       duration:settings.delay.first,
       useNativeDriver:false
     }).start(),
     Animated.timing(animBlueY,{
-      toValue:215,
+      toValue:-27,
       duration:settings.delay.first,
       useNativeDriver:false
     }).start(),
@@ -257,12 +257,12 @@ const startColor = () =>{
       useNativeDriver:false
     }).start(),
     Animated.timing(animRedX,{ // Red
-      toValue:250,
+      toValue:220,
       duration:settings.delay.first,
       useNativeDriver:false
     }).start(),
     Animated.timing(animRedY,{
-      toValue:215,
+      toValue:-27,
       duration:settings.delay.first,
       useNativeDriver:false
     }).start(),
@@ -272,12 +272,12 @@ const startColor = () =>{
       useNativeDriver:false
     }).start(),
     Animated.timing(animGreenX,{ //Green
-      toValue:320,
+      toValue:290,
       duration:settings.delay.first,
       useNativeDriver:false
     }).start(),
     Animated.timing(animGreenY,{
-      toValue:235,
+      toValue:0,
       duration:settings.delay.first,
       useNativeDriver:false
     }).start(),
@@ -287,12 +287,12 @@ const startColor = () =>{
       useNativeDriver:false
     }).start(),
     Animated.timing(animGrayX,{ //Gray
-      toValue:360,
+      toValue:320,
       duration:settings.delay.first,
       useNativeDriver:false
     }).start(),
     Animated.timing(animGrayY,{
-      toValue:295,
+      toValue:68.5,
       duration:settings.delay.first,
       useNativeDriver:false
     }).start(),
@@ -317,12 +317,12 @@ const returnColor = value =>{
     case "blue":
       Animated.sequence([
         Animated.timing(animBlueY,{ //Blue
-          toValue:313,
+          toValue:65,
           duration:200,
           useNativeDriver:false
         }).start(),
         Animated.timing(animBlueX,{
-          toValue:140,
+          toValue:100,
           duration:200,
           useNativeDriver:false
         }).start(),
@@ -356,12 +356,12 @@ const returnColor = value =>{
     case "red":
       Animated.sequence([
         Animated.timing(animRedY,{ //Red
-          toValue:313,
+          toValue:65,
           duration:200,
           useNativeDriver:false
         }).start(),
         Animated.timing(animRedX,{
-          toValue:140,
+          toValue:100,
           duration:200,
           useNativeDriver:false
         }).start(),
@@ -395,12 +395,12 @@ const returnColor = value =>{
     case "green":
       Animated.sequence([
         Animated.timing(animGreenY,{ //Green
-          toValue:313,
+          toValue:65,
           duration:200,
           useNativeDriver:false
         }).start(),
         Animated.timing(animGreenX,{
-          toValue:140,
+          toValue:100,
           duration:200,
           useNativeDriver:false
         }).start(),
@@ -434,12 +434,12 @@ const returnColor = value =>{
     case "gray":
       Animated.sequence([
         Animated.timing(animGrayY,{ //Gray
-          toValue:313,
+          toValue:65,
           duration:200,
           useNativeDriver:false
         }).start(),
         Animated.timing(animGrayX,{
-          toValue:140,
+          toValue:100,
           duration:200,
           useNativeDriver:false
         }).start(),
@@ -583,30 +583,6 @@ const switchColors = (check, value1, value2, color)=>{
       </View>
       :
       <View/>}
-      {active?
-        <Animated.View style={[styles.chooseBlueColor,{opacity:animBlue, top:animBlueY, left:animBlueX}]}>
-          <IconButton icon="circle" color={colors.blue} size={35} 
-            onPress={()=>{switchColors(true,animStatus.current,active,'blue')}} />
-        </Animated.View>      
-        :<View/>}
-      {active?
-        <Animated.View style={[styles.chooseRedColor,{opacity:animRed, top:animRedY, left:animRedX}]}>
-          <IconButton icon="circle" color={colors.red} size={35} 
-            onPress={()=>{switchColors(true,animStatus.current,active,'red')}} />
-        </Animated.View>      
-        :<View/>}
-      {active?
-        <Animated.View style={[styles.chooseGreenColor,{opacity:animGreen, top:animGreenY, left:animGreenX}]}>
-          <IconButton icon="circle" color={colors.green} size={35} 
-             onPress={()=>{switchColors(true,animStatus.current,active,'green')}} />
-        </Animated.View>      
-        :<View/>}
-      {active?
-        <Animated.View style={[styles.chooseGrayColor,{opacity:animGray, top:animGrayY, left:animGrayX}]}>
-          <IconButton icon="circle" color={colors.gray} size={35} 
-            onPress={()=>{switchColors(true,animStatus.current,active,'gray')}} />
-        </Animated.View>   
-        :<View/>}
       <TouchableHighlight 
         onLongPress={()=>openAndCloseTranslation()} 
         underlayColor="#cccccc" 
@@ -615,8 +591,32 @@ const switchColors = (check, value1, value2, color)=>{
         <View style={styles.card}>
             <TextInput editable={active} style={styles.word}
               onChangeText={text=>setWord(text)}>{props.word}</TextInput>
+            {active?
+              <Animated.View style={[styles.chooseBlueColor,{opacity:animBlue, top:animBlueY, left:animBlueX}]}>
+                <IconButton icon="circle" color={colors.blue} size={30} 
+                  onPress={()=>{switchColors(true,animStatus.current,active,'blue')}} />
+              </Animated.View>      
+              :<View/>}
+            {active?
+              <Animated.View style={[styles.chooseRedColor,{opacity:animRed, top:animRedY, left:animRedX}]}>
+                <IconButton icon="circle" color={colors.red} size={30} 
+                  onPress={()=>{switchColors(true,animStatus.current,active,'red')}} />
+              </Animated.View>      
+              :<View/>}
+            {active?
+              <Animated.View style={[styles.chooseGreenColor,{opacity:animGreen, top:animGreenY, left:animGreenX}]}>
+                <IconButton icon="circle" color={colors.green} size={30} 
+                  onPress={()=>{switchColors(true,animStatus.current,active,'green')}} />
+              </Animated.View>      
+              :<View/>}
+            {active?
+              <Animated.View style={[styles.chooseGrayColor,{opacity:animGray, top:animGrayY, left:animGrayX}]}>
+                <IconButton icon="circle" color={colors.gray} size={30} 
+                  onPress={()=>{switchColors(true,animStatus.current,active,'gray')}} />
+              </Animated.View>   
+              :<View/>}
             {staticColor?
-            <IconButton style={styles.gender} icon="circle" size={35} color={props.color?props.color:'#e6e6e6'} 
+            <IconButton style={styles.gender} icon="circle" size={30} color={props.color?props.color:'#e6e6e6'} 
             onPress={active?()=>startColor():null} />
             :<View/>}
             <TextInput editable={active} style={styles.primary}
@@ -770,7 +770,7 @@ const styles = StyleSheet.create({
         zIndex:1,
         flex:1,
         position:'absolute',
-        left:98.7,
+        left:100,
         top: 65
       },
       primary:{
