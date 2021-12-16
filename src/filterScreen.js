@@ -10,11 +10,8 @@ export const FilterScreen = ({navigation}) => {
     const [loadCategories, setLoadCategories] = React.useState(categories)
 
     React.useEffect(()=>{
-            
-        return ()=>{
-            setLoadCategories(categories)
-        }
-    },[loadCategories])
+        setLoadCategories(categories)
+    },[categories])
 
     return(
         <View style={styles.mainContainer}>
