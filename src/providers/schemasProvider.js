@@ -14,9 +14,9 @@ const SchemaProvider = ({children}) =>{
     const [categories, setCategories] = React.useState([])
     const [DBNames, setDBNames] = React.useState([])
     const [schemas, setSchemas] = React.useState([])
+    const [collection, setCollection] = React.useState([])
     const [schemaConfig, setSchemaConfig] = React.useState({})
     const [isNotStudyNorLearnt, setIsNotStudyNorLearnt] = React.useState([])
-    const [loading, setLoading] = React.useState(true)
     
     const realmRef = React.useRef(null)
 
@@ -68,6 +68,7 @@ const SchemaProvider = ({children}) =>{
                 setWordsSaved(syncSchemas.length)
                 setWordsLearnt((filterObjects("learnt",syncSchemas).length*100/syncSchemas.length).toFixed(2))
                 setIsNotStudyNorLearnt(getAutoComplete(syncSchemas))
+                setCollection(syncSchemas)
             })
         })
             
@@ -299,7 +300,7 @@ const SchemaProvider = ({children}) =>{
             wordsSaved,
             wordsLearnt,
             isNotStudyNorLearnt,
-            loading,
+            collection,
             languageChange,
             changeWord,
             deleteWord,

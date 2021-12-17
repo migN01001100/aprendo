@@ -13,7 +13,7 @@ let color = '' //save color for DB
 let flag = false
 let copyCat = []
 export const WordScreen = ({navigation}) => {
-    const {schemas, addWord, isNotStudyNorLearnt, schemaConfig} = useSchemas()
+    const {collection, addWord, isNotStudyNorLearnt, schemaConfig} = useSchemas()
     const [main, setMain] = React.useState('')
     const [category, setCategory] = React.useState('')
     
@@ -126,7 +126,7 @@ export const WordScreen = ({navigation}) => {
 
     const handleErrorMain = (text) =>{
         let word = []
-        schemas.map(item=>word.push(item.word))
+        collection.map(item=>word.push(item.word))
         return word.includes(text)
     }
 

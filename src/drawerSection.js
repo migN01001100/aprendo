@@ -6,12 +6,12 @@ import {
     Paragraph,
     Drawer as PaperDrawer,
     Text,
-    Appbar,
-    Drawer
+    Appbar
 } from 'react-native-paper';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet,   } from 'react-native';
 import { useSchemas } from './providers/schemasProvider';
 import { useAuth } from './providers/authProvider';
+import { View } from 'react-native';
 
 
 export const ItemsDrawer = props => {
