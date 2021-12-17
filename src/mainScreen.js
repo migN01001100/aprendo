@@ -133,14 +133,16 @@ const Cards = props =>{
   const [primary, setPrimary] = React.useState(props.primary)
   const [secondary, setSecondary] = React.useState(props.secondary)
   const [topLeft, setTopLeft] = React.useState(props.topLeft)
-  const [bottomLeft, setBottomLeft] = React.useState(props.bottomLeft)
   const [topRight, setTopRight] = React.useState(props.topRight)
-  const [mSecondary, setMsecondary] = React.useState(props.mSecondary)
-  const [middle, setMiddle] = React.useState(props.middle)
+  const [bottomLeft, setBottomLeft] = React.useState(props.bottomLeft)
   const [bottomRight, setBottomRight] = React.useState(props.bottomRight)
+  const [middle, setMiddle] = React.useState(props.middle)
+  const [mSecondary, setMsecondary] = React.useState(props.mSecondary)
+  const [newTranslate, setNewTranslate] = React.useState(props.translation)
+  const [categories, setCategories] = React.useState(props.categories)
   const [staticColor, setStaticColor] = React.useState(true)
   const [addTranslationIco, setAddTranslationIco] = React.useState(true)
-  const [newTranslate, setNewTranslate] = React.useState(props.translation)
+  
 
   let color = props.color
 
@@ -150,6 +152,19 @@ const Cards = props =>{
       return
     }
     setActive(false)
+  }
+  const resetAll = ()=>{
+    setWord(props.word)
+    setPrimary(props.primary)
+    setSecondary(props.secondary)
+    setTopLeft(props.topLeft)
+    setTopRight(props.topRight)
+    setBottomLeft(props.bottomLeft)
+    setBottomRight(props.bottomRight)
+    setMiddle(props.middle)
+    setMsecondary(props.mSecondary)
+    setNewTranslate(props.translation)
+    setCategories(props.categories)
   }
 
 ///ColorSelector
@@ -185,7 +200,6 @@ const animTextInputCategoryOpacity = React.useRef(new Animated.Value(0)).current
 const animTranslationX = React.useRef(new Animated.Value(-350)).current
 
 const [changeIco, setChangeIco] = React.useState(true)
-const [categories, setCategories] = React.useState(props.categories)
 const [categoryIco, setCategoryIco] = React.useState(true)
 const [newCategory, setNewCategory] = React.useState('')
 
@@ -641,6 +655,7 @@ const switchColors = (check, value1, value2, color)=>{
               setStaticColor(true)
               setChangeIco(true)
               switchColors(false,animStatus.current,active,'gray')
+              resetAll()
             }} />
             {active?<IconButton style={styles.delete} color='#00dac4' icon="delete" 
             onPress={()=>{

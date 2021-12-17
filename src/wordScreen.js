@@ -13,7 +13,7 @@ let color = '' //save color for DB
 let flag = false
 let copyCat = []
 export const WordScreen = ({navigation}) => {
-    const {collection, addWord, isNotStudyNorLearnt, schemaConfig} = useSchemas()
+    const {categories, collection, addWord, schemaConfig} = useSchemas()
     const [main, setMain] = React.useState('')
     const [category, setCategory] = React.useState('')
     
@@ -129,9 +129,13 @@ export const WordScreen = ({navigation}) => {
         collection.map(item=>word.push(item.word))
         return word.includes(text)
     }
+    const [query, setQuery] = React.useState(categories)
 
+    React.useEffect(()=>{
+        setQuery(categories)
+    },[categories])
     
-    const [query, setQuery] = React.useState(isNotStudyNorLearnt)
+    
     
     const _match = (word, list)=> {
         let regex = new RegExp("\\b"+word+"\\w*","gi")
@@ -159,16 +163,16 @@ export const WordScreen = ({navigation}) => {
                     break;
                 case 'empty':
                     if(chip.length === 0){
-                        setQuery(isNotStudyNorLearnt)
+                        setQuery(categories)
                     }else{
                         let copyCat = chip.toString() 
-                        setQuery(isNotStudyNorLearnt.filter(x => !copyCat.includes(x)))
+                        setQuery(categories.filter(x => !copyCat.includes(x)))
                     }
                         flag = false
                     break;
                 case 'checkList':
                     setQuery(()=>_match(word,query))
-                    copyCat = isNotStudyNorLearnt.filter(x => x !== query.toString())
+                    copyCat = categories.filter(x => x !== query.toString())
                     if(setLast >= 2){
                         flag = true
                     }
@@ -194,7 +198,7 @@ export const WordScreen = ({navigation}) => {
                             onChangeText={word => {setMain(word)}}
                         />
                         {handleErrorMain(main)?<HelperText type='error' visible={true}>Error: This word already exist.</HelperText>:<View/>}
-                        <ScrollView horizontal={true} style={styles.chipTop} showsHorizontalScrollIndicator={false} >
+                        <ScrollView centerContent={true} horizontal={true} style={styles.chipTop} showsHorizontalScrollIndicator={false} >
                             {query.map(item=>
                                 <Chip
                                     key={item + "_" + Math.random().toString().substr(2,9)}
@@ -280,7 +284,7 @@ export const WordScreen = ({navigation}) => {
                             }else{
                             addWord(schemaConfig.db)(main)(chip.length == 0?["all"]:chip)(color)(translation)(primary)(secondary)(middle)(mSecondary)(topLeft)(topRight)(bottomLeft)(bottomRight)
                             navigation.navigate('Home')
-                            setQuery(isNotStudyNorLearnt)
+                            setQuery(categories)
                             setMain("")
                             setChip([])
                             color = ''
@@ -293,10 +297,10 @@ export const WordScreen = ({navigation}) => {
                             setTopRight("")
                             setBottomLeft("")
                             setBottomRight("")
+                            Animated.timing(animGray,{}).reset()
                             Animated.timing(animBlue,{}).reset()
                             Animated.timing(animGreen,{}).reset()
                             Animated.timing(animRed,{}).reset()
-                            Animated.timing(animGray,{}).reset()
                             }
                         }}/>
                 </View>

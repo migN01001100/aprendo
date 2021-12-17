@@ -16,7 +16,6 @@ const SchemaProvider = ({children}) =>{
     const [schemas, setSchemas] = React.useState([])
     const [collection, setCollection] = React.useState([])
     const [schemaConfig, setSchemaConfig] = React.useState({})
-    const [isNotStudyNorLearnt, setIsNotStudyNorLearnt] = React.useState([])
     
     const realmRef = React.useRef(null)
 
@@ -52,22 +51,35 @@ const SchemaProvider = ({children}) =>{
             setCategories(getCategories(syncSchemas))
             setWordsSaved(syncSchemas.length)
             setWordsLearnt((filterObjects("learnt",syncSchemas).length*100/syncSchemas.length).toFixed(2))
-            setIsNotStudyNorLearnt(getAutoComplete(syncSchemas))
             
-            syncShemaConfig.addListener(async ()=>{
-                const syncShemaConfig =  realm.objects("Config")[0]
-                const syncSchemas =  realm.objects(syncShemaConfig.db)
-                setSchemaConfig(syncShemaConfig)
-                setSchemas(isFilter(removeLearntWords(syncSchemas),syncShemaConfig.filter))
-                setCategories(getCategories(syncSchemas))
+            syncShemaConfig.addListener((obj,changes)=>{
+                const { changedProperties } = changes
+
+                if(changedProperties[0] === 'db'){
+                    const syncShemaConfig =  realm.objects("Config")[0]
+                    const syncSchemas =  realm.objects(syncShemaConfig.db)
+                    setSchemas(isFilter(removeLearntWords(syncSchemas),syncShemaConfig.filter))
+                    setSchemaConfig(syncShemaConfig)
+                    setCategories(getCategories(syncSchemas))
+                    setWordsSaved(syncSchemas.length)
+                    setStudying(filterObjects("studying",removeLearntWords(syncSchemas)))
+                    setLearnt(filterObjects("learnt",syncSchemas))
+                    setCollection(syncSchemas)
+                }else{
+                    const syncShemaConfig =  realm.objects("Config")[0]
+                    const syncSchemas =  realm.objects(syncShemaConfig.db)
+                    setSchemas(isFilter(removeLearntWords(syncSchemas),syncShemaConfig.filter))
+                    setSchemaConfig(syncShemaConfig)
+                }
             })
             syncSchemas.addListener(()=>{
                 const syncSchemas = realm.objects(syncShemaConfig.db)
                 setStudying(filterObjects("studying",removeLearntWords(syncSchemas)))
                 setLearnt(filterObjects("learnt",syncSchemas))
                 setWordsSaved(syncSchemas.length)
+                setSchemas(isFilter(removeLearntWords(syncSchemas),syncShemaConfig.filter))
                 setWordsLearnt((filterObjects("learnt",syncSchemas).length*100/syncSchemas.length).toFixed(2))
-                setIsNotStudyNorLearnt(getAutoComplete(syncSchemas))
+                setCategories(getCategories(syncSchemas))
                 setCollection(syncSchemas)
             })
         })
@@ -82,18 +94,6 @@ const SchemaProvider = ({children}) =>{
         }
     },[user])
 
-    const setObjects = new Set()
-    const getAutoComplete = (schemas) =>{
-        schemas.map(item=>{
-            let eachObject = item.category
-            eachObject.map(each=>{
-                if(each !== "studying" && each !== "learnt"){
-                    setObjects.add(each) 
-                }
-            })
-        })
-        return Array.from(setObjects)
-    }
     //Remove lernt words
     const removeLearntWords = (schemas)=> {
         const tempList =[]
@@ -299,7 +299,6 @@ const SchemaProvider = ({children}) =>{
             categories,
             wordsSaved,
             wordsLearnt,
-            isNotStudyNorLearnt,
             collection,
             languageChange,
             changeWord,
