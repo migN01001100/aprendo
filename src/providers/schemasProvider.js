@@ -58,6 +58,9 @@ const SchemaProvider = ({children}) =>{
                 if(changedProperties[0] === 'db'){
                     const syncShemaConfig =  realm.objects("Config")[0]
                     const syncSchemas =  realm.objects(syncShemaConfig.db)
+                    setStudying(filterObjects("studying",removeLearntWords(syncSchemas)))
+                    setLearnt(filterObjects("learnt",syncSchemas))
+                    setWordsLearnt((filterObjects("learnt",syncSchemas).length*100/syncSchemas.length).toFixed(2))
                     setSchemas(isFilter(removeLearntWords(syncSchemas),syncShemaConfig.filter))
                     setSchemaConfig(syncShemaConfig)
                     setCategories(getCategories(syncSchemas))
