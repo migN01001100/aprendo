@@ -138,6 +138,26 @@ export const Turkish = {
     primaryKey: "_id"
 };
 
+export const Polish = {
+    name: "Polish",
+    properties:{
+        _id:"int",
+        word:"string",
+        category:"string[]",
+        color:"string",
+        translation:"string",
+        primary:"string",
+        secondary:"string",
+        middle:"string",
+        mSecondary:"string",
+        topLeft:"string",
+        topRight:"string",
+        bottomLeft:"string",
+        bottomRight:"string"
+    },
+    primaryKey: "_id"
+};
+
 export const Config = {
     name: "Config",
     properties:{

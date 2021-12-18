@@ -11,10 +11,11 @@ import { useSchemas } from './providers/schemasProvider';
 const Main = ({navigation}) => {
   const {schemas, schemaConfig, modifyCategory} = useSchemas() 
   const [stateFab, setStateFab] = React.useState(false)
-  const [ref, setRef] = React.useState()
+  const [ref, setRef] = React.useState({})
   const [pointerA, setPointerA] = React.useState() //helps to calculate index of item
   const [pointerB, setPointerB] = React.useState() //helps to calculate index of item
   
+
   const screenWidth= Dimensions.get('screen').width
   const onStateChange = ()=>{
     if(stateFab){
@@ -52,6 +53,8 @@ const Main = ({navigation}) => {
               onBeforeSnapToItem={()=>setPointerA(ref.currentIndex)}
               onSnapToItem={()=>setPointerB(ref.currentIndex)}
               activeAnimationType='decay'
+              onViewableItemsChanged={()=>console.log("view changed")}
+              onRefresh={()=>console.log("has refreshed")}
               />}
               <FAB.Group
                 open={stateFab}
@@ -142,7 +145,6 @@ const Cards = props =>{
   const [categories, setCategories] = React.useState(props.categories)
   const [staticColor, setStaticColor] = React.useState(true)
   const [addTranslationIco, setAddTranslationIco] = React.useState(true)
-  
 
   let color = props.color
 

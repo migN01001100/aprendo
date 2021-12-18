@@ -23,8 +23,21 @@ const SchemaProvider = ({children}) =>{
         const openRealmBehaviourConfig = {
             type: "openImmediately"
         }
+        const allSchemas=[
+            schema.German, 
+            schema.Spanish, 
+            schema.Russian, 
+            schema.Ukrainian, 
+            schema.English, 
+            schema.French, 
+            schema.Config, 
+            schema.Polish, 
+            schema.Turkish]
+
         const config = {
-            schema:[schema.German, schema.Spanish , schema.Russian, schema.Ukrainian, schema.English, schema.French, schema.Config],
+            path:`${user.id}.realm`,
+            schemaVersion:1,
+            schema:allSchemas,
             sync:{
                 user,
                 partitionValue: user.id,
@@ -32,7 +45,8 @@ const SchemaProvider = ({children}) =>{
                 existingRealmFileBehavior: openRealmBehaviourConfig
             }
         }
-        
+
+
         Realm.open(config).then( async realm=>{
             realmRef.current = realm
             const syncShemaConfig = await realm.objects("Config")[0]
