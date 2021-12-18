@@ -40,22 +40,23 @@ const Main = ({navigation}) => {
           <Appbar.Header>
               <Appbar.Action icon="menu" onPress={()=>navigation.dispatch(DrawerActions.openDrawer())} />
               <Appbar.Content title={`${schemaConfig.db}`} subtitle={`${schemaConfig.filter}`} />
-          </Appbar.Header>{schemas.length === 0?
+          </Appbar.Header>
+          {schemas.length === 0?
           <IsEmpty/>:
             <Carousel
               ref={ref=>setRef(ref)}
               layout={'tinder'}
               layoutCardOffset={15}
-              data={schemas?schemas:[]}
+              data={schemas}
               renderItem={DataCards}
               sliderWidth={screenWidth}
               itemWidth={screenWidth}
               onBeforeSnapToItem={()=>setPointerA(ref.currentIndex)}
               onSnapToItem={()=>setPointerB(ref.currentIndex)}
               activeAnimationType='decay'
-              onViewableItemsChanged={()=>console.log("view changed")}
-              onRefresh={()=>console.log("has refreshed")}
-              />}
+              getItemCount={item=>console.log(item)}
+              inactiveSlideOpacity={0.3}
+              getItemLayout={(data, index)=>console.log(`data: ${data} index: ${index}`)}/>}
               <FAB.Group
                 open={stateFab}
                 icon={stateFab ? 'feather' : 'notebook-outline'}

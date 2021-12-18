@@ -17,6 +17,7 @@ const SchemaProvider = ({children}) =>{
     const [collection, setCollection] = React.useState([])
     const [schemaConfig, setSchemaConfig] = React.useState({})
     
+    
     const realmRef = React.useRef(null)
 
     React.useEffect( ()=>{
@@ -66,12 +67,12 @@ const SchemaProvider = ({children}) =>{
             setWordsSaved(syncSchemas.length)
             setWordsLearnt((filterObjects("learnt",syncSchemas).length*100/syncSchemas.length).toFixed(2))
             
-            syncShemaConfig.addListener((obj,changes)=>{
+            syncShemaConfig.addListener(async (obj,changes)=>{
                 const { changedProperties } = changes
 
                 if(changedProperties[0] === 'db'){
-                    const syncShemaConfig =  realm.objects("Config")[0]
-                    const syncSchemas =  realm.objects(syncShemaConfig.db)
+                    const syncShemaConfig =  await realm.objects("Config")[0]
+                    const syncSchemas =  await realm.objects(syncShemaConfig.db)
                     setStudying(filterObjects("studying",removeLearntWords(syncSchemas)))
                     setLearnt(filterObjects("learnt",syncSchemas))
                     setWordsLearnt((filterObjects("learnt",syncSchemas).length*100/syncSchemas.length).toFixed(2))
@@ -83,21 +84,27 @@ const SchemaProvider = ({children}) =>{
                     setLearnt(filterObjects("learnt",syncSchemas))
                     setCollection(syncSchemas)
                 }else{
-                    const syncShemaConfig =  realm.objects("Config")[0]
-                    const syncSchemas =  realm.objects(syncShemaConfig.db)
+                    const syncShemaConfig = await realm.objects("Config")[0]
+                    const syncSchemas = await realm.objects(syncShemaConfig.db)
                     setSchemas(isFilter(removeLearntWords(syncSchemas),syncShemaConfig.filter))
                     setSchemaConfig(syncShemaConfig)
                 }
             })
-            syncSchemas.addListener(()=>{
-                const syncSchemas = realm.objects(syncShemaConfig.db)
+            syncSchemas.addListener(async (obj, changes)=>{
+                // if(changes.deletions[0] > 0){
+                //     console.log("something has been deleted")
+                //     return
+                // }
+                const syncShemaConfig = await realm.objects("Config")[0]
+                const syncSchemas = await realm.objects(syncShemaConfig.db)
+                setSchemas(isFilter(removeLearntWords(syncSchemas),syncShemaConfig.filter))
+                setCollection(syncSchemas)
                 setStudying(filterObjects("studying",removeLearntWords(syncSchemas)))
                 setLearnt(filterObjects("learnt",syncSchemas))
                 setWordsSaved(syncSchemas.length)
-                setSchemas(isFilter(removeLearntWords(syncSchemas),syncShemaConfig.filter))
                 setWordsLearnt((filterObjects("learnt",syncSchemas).length*100/syncSchemas.length).toFixed(2))
                 setCategories(getCategories(syncSchemas))
-                setCollection(syncSchemas)
+                
             })
         })
             
@@ -261,6 +268,7 @@ const SchemaProvider = ({children}) =>{
         realm.write(()=>{
           realm.delete(_item)
         })
+        console.log(`deleted ${_item}`)
       }
     
     const languageChange = language => {
