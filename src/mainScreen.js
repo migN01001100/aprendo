@@ -53,10 +53,9 @@ const Main = ({navigation}) => {
               itemWidth={screenWidth}
               onBeforeSnapToItem={()=>setPointerA(ref.currentIndex)}
               onSnapToItem={()=>setPointerB(ref.currentIndex)}
-              activeAnimationType='decay'
-              getItemCount={item=>console.log(item)}
-              inactiveSlideOpacity={0.3}
-              getItemLayout={(data, index)=>console.log(`data: ${data} index: ${index}`)}/>}
+              activeAnimationType='decay'   
+              />}
+              
               <FAB.Group
                 open={stateFab}
                 icon={stateFab ? 'feather' : 'notebook-outline'}
