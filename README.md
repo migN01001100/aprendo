@@ -1,6 +1,6 @@
 # aprendo
 
-I decided to create an app that could help me on learning vocabulary faster and through repetition. Since I already have experience on languages this was my perfect solution and this app is the result of 3 years planned work and about 3 months of coding. The initial idea was to publish it on a playstore but due to extraordinary reasons and lack of time and internet connection will be better to shared with you all since we never know what will be tomorrow.
+I decided to create an app that could help me on learning vocabulary faster and through repetition. Since I already have experience on languages this was my perfect solution and this app is the result of 3 years planned work and about 3 months of coding. The initial idea was to publish it on a playstore but due to extraordinary reasons and lack of time also internet connection. It will be better to share with you all since we never know what will be tomorrow.
 
 On my self belief this is a beta version of the whole project. As soon as it is possible I will be back to finish what I started.
 
